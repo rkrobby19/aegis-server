@@ -11,3 +11,9 @@ createdb:
 
 dropdb:
 	docker exec -it ${CONTAINER_NAME} dropdb ${DB_DATABASE} -U ${DB_USERNAME}
+
+migrateup:
+	npx sequelize-cli db:migrate
+
+migratedown:
+	npx sequelize-cli db:migrate:undo
