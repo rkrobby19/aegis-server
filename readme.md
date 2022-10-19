@@ -36,7 +36,6 @@ $ pnpm install
 
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [make](https://linuxhint.com/install-make-ubuntu/)
-- [pnpm](https://pnpm.io/installation)
 
 ### Environment Parameter
 
