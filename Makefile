@@ -6,6 +6,9 @@ endif
 postgres:
 	docker run --name ${CONTAINER_NAME} -p ${DB_PORT}:${CONTAINER_PORT} -e POSTGRES_USER=${DB_USERNAME} -e POSTGRES_PASSWORD=${DB_PASSWORD} -d ${DOCKER_IMAGE}
 
+startcontainer:
+	docker start ${CONTAINER_NAME}
+
 createdb:
 	docker exec -it ${CONTAINER_NAME} createdb --username=${DB_USERNAME} --owner=${DB_USERNAME} ${DB_DATABASE}
 
@@ -17,3 +20,8 @@ migrateup:
 
 migratedown:
 	npx sequelize-cli db:migrate:undo
+
+start:
+	pnpm start
+
+.PHONY: postgres startcontainer createdb dropdb migrateup migratedown start
