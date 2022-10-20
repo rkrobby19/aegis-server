@@ -16,6 +16,11 @@
   },
   "plugins": ["react"],
   "rules": {
-    "no-console": "off"
+    "no-console": 0,
+    "import/no-import-module-exports": 0,
+    "import/no-dynamic-require": 0,
+    "global-require": 0,
+    "no-empty": 0,
+    "import/named": 0
   }
 }
