@@ -32,8 +32,9 @@ Now you can start to install the dependencies, this project is pinned with [Volt
 $ pnpm install
 ```
 
-### Dependencies
+### Requirements
 
+- [Node.js](https://nodejs.org/en/)
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [make](https://linuxhint.com/install-make-ubuntu/)
 
@@ -97,10 +98,10 @@ make migratedown
 
 ### Run the development server:
 
-- Run server:
+- Run server in development:
 
 ```
-make start
+make dev
 ```
 
 ## Development Flow

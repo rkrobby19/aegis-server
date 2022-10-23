@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  postgresql-prod:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=aegis
+      - POSTGRES_PASSWORD=bismillah
+      - POSTGRES_DB=aegis-production
+  api-prod:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    entrypoint: ["/bin/sh", "/app/start-prod.sh"]
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.production
+    depends_on:
+      - postgresql-prod
+    command: ["/app/wait-for-it.sh", "postgresql-prod:5432"]
