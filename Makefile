@@ -1,5 +1,5 @@
-ifneq (,$(wildcard ./.env))
-	include .env
+ifneq (,$(wildcard ./.env.development))
+	include .env.development
 	export
 endif
 
@@ -21,7 +21,17 @@ migrateup:
 migratedown:
 	npx sequelize-cli db:migrate:undo
 
-start:
-	pnpm start
+developmentup:
+	docker compose -f docker-compose.dev.yml up --build
 
-.PHONY: postgres startcontainer createdb dropdb migrateup migratedown start
+developmentdown:
+	docker compose -f docker-compose.dev.yml down -v
+
+productionup:
+	sudo docker compose -f docker-compose.prod.yml up --build
+
+productiondown:
+	sudo docker compose -f docker-compose.prod.yml down -v
+
+
+.PHONY: postgres startcontainer createdb dropdb migrateup migratedown developmentup developmentdown productionup productiondown

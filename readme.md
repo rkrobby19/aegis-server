@@ -101,7 +101,7 @@ make migratedown
 - Run server in development:
 
 ```
-make dev
+make developmentup
 ```
 
 ## Development Flow
