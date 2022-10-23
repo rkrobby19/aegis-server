@@ -8,7 +8,7 @@
     "format:check": "prettier --check ./src",
     "format:write": "prettier --write ./src",
     "lint:check": "eslint ./src",
-    "lint:fix": "eslint --fix ./",
+    "lint:fix": "eslint --fix ./src",
     "start": "npm run build && node ./dist/index.js",
     "clean": "rm -rf dist && mkdir dist",
     "build-babel": "babel -d ./dist src -s",
