@@ -3,9 +3,9 @@ services:
   postgresql-prod:
     image: postgres:14-alpine
     environment:
-      - POSTGRES_USER=aegis
-      - POSTGRES_PASSWORD=bismillah
-      - POSTGRES_DB=aegis-production
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
   api-prod:
     build:
       context: .
@@ -19,3 +19,4 @@ services:
     depends_on:
       - postgresql-prod
     command: ["/app/wait-for-it.sh", "postgresql-prod:5432"]
+    

@@ -1,5 +1,5 @@
-ifneq (,$(wildcard ./.env.development))
-	include .env.development
+ifneq (,$(wildcard ./.env.local))
+	include .env.local
 	export
 endif
 
@@ -12,26 +12,23 @@ startcontainer:
 createdb:
 	docker exec -it ${CONTAINER_NAME} createdb --username=${DB_USERNAME} --owner=${DB_USERNAME} ${DB_DATABASE}
 
+createdbdev:
+	pnpm sequelize db:create
+
 dropdb:
 	docker exec -it ${CONTAINER_NAME} dropdb ${DB_DATABASE} -U ${DB_USERNAME}
 
+dropdbdev:
+	pnpm sequelize db:drop
+
 migrateup:
-	npx sequelize-cli db:migrate
+	pnpm sequelize-cli db:migrate
 
 migratedown:
-	npx sequelize-cli db:migrate:undo
+	pnpm sequelize-cli db:migrate:undo
 
-developmentup:
-	docker compose -f docker-compose.dev.yml up --build
+rundev:
+	pnpm dev
 
-developmentdown:
-	docker compose -f docker-compose.dev.yml down -v
-
-productionup:
-	sudo docker compose -f docker-compose.prod.yml up --build
-
-productiondown:
-	sudo docker compose -f docker-compose.prod.yml down -v
-
-
-.PHONY: postgres startcontainer createdb dropdb migrateup migratedown developmentup developmentdown productionup productiondown
+.PHONY:
+	postgres startcontainer createdb createdbdev dropdb dropdbdev migrateup migratedown

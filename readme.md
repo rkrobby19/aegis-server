@@ -1,4 +1,4 @@
-# Aegis.
+# Aegis
 
 ## Description
 
@@ -84,6 +84,27 @@ make createdb
 make dropdb
 ```
 
+### Run the development server:
+
+- Run server
+
+```
+make rundev
+```
+
+- Created db
+
+```
+make createdbdev
+
+```
+
+- Drop database:
+
+```
+make dropdbdev
+```
+
 - Run db migration up all versions:
 
 ```
@@ -94,14 +115,6 @@ make migrateup
 
 ```
 make migratedown
-```
-
-### Run the development server:
-
-- Run server in development:
-
-```
-make developmentup
 ```
 
 ## Development Flow

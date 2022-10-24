@@ -8,9 +8,9 @@ module.exports = function (api) {
           path: '.env.production',
         }]],
       },
-      development: {
+      stagging: {
         plugins: [['inline-dotenv', {
-          path: '.env.development',
+          path: '.env.stage',
         }]],
       },
     },

@@ -3,22 +3,22 @@ services:
   postgresql-dev:
     image: postgres:14-alpine
     environment:
-      - POSTGRES_USER=aegis
-      - POSTGRES_PASSWORD=bismillah
-      - POSTGRES_DB=aegis
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
   api-dev:
     build:
       context: .
       args:
-        NODE_ENV: development
+        NODE_ENV: stagging
+    entrypoint: ["/bin/sh", "/app/start-dev.sh"]
     ports:
       - "8080:8080"
     volumes:
       - ./:/app
       - /app/node_modules
     env_file:
-      - .env.development
+      - .env.stage
     depends_on:
       - postgresql-dev
     command: ["/app/wait-for-it.sh", "postgresql-dev:5432"]
-    entrypoint: ["/bin/sh", "/app/start-dev.sh"]

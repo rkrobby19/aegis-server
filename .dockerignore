@@ -4,6 +4,7 @@ npm-debug.log
 .gitignore
 .husky
 dist
+dockerfile
 docker-compose.yml
 docker-compose.dev.yml
 docker-compose.prod.yml
