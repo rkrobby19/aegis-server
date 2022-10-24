@@ -14,7 +14,6 @@ COPY . .
 FROM node:16-alpine
 COPY --from=builder /app /app
 WORKDIR /app
-# COPY --chown=node:node /app /app
 
 EXPOSE 8080
 CMD [ "node", "src/index.js" ]
