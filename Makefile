@@ -1,5 +1,5 @@
-ifneq (,$(wildcard ./.env.dev))
-	include .env.dev
+ifneq (,$(wildcard ./.env))
+	include .env
 	export
 endif
 
@@ -9,16 +9,16 @@ postgres:
 startcontainer:
 	docker start ${CONTAINER_NAME}
 
-createdb:
+createdbdev:
 	docker exec -it ${CONTAINER_NAME} createdb --username=${DB_USERNAME} --owner=${DB_USERNAME} ${DB_DATABASE}
 
-createdbdev:
+dropdbdev:
+	docker exec -it ${CONTAINER_NAME} dropdb ${DB_DATABASE} -U ${DB_USERNAME}
+
+createdb:
 	pnpm sequelize db:create
 
 dropdb:
-	docker exec -it ${CONTAINER_NAME} dropdb ${DB_DATABASE} -U ${DB_USERNAME}
-
-dropdbdev:
 	pnpm sequelize db:drop
 
 migrateup:
@@ -27,8 +27,14 @@ migrateup:
 migratedown:
 	pnpm sequelize-cli db:migrate:undo
 
-rundev:
+dev:
 	pnpm dev
 
+stage:
+	docker compose --env-file .env -f docker-compose.dev.yml up --build
+
+stagedown:
+	docker compose --env-file .env -f docker-compose.dev.yml down -v
+
 .PHONY:
-	postgres startcontainer createdb createdbdev dropdb dropdbdev migrateup migratedown
+	postgres startcontainer createdb createdbdev dropdb dropdbdev migrateup migratedown dev stage stagedown

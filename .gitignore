@@ -1,5 +1,3 @@
 node_modules
-.env.dev
-.env.stage
-.env.production
+.env
 dist

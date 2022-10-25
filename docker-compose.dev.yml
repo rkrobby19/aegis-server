@@ -5,20 +5,21 @@ services:
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_DB=${DB_DATABASE_STAGE}
   api-dev:
     build:
       context: .
       args:
-        NODE_ENV: stagging
+        NODE_ENV: stage
     entrypoint: ["/bin/sh", "/app/start-dev.sh"]
     ports:
       - "8080:8080"
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    env_file:
-      - .env.stage
+    environment:
+      - dialect=${DB_CONNECTION}
+      - host=${DB_HOST_STAGE}
+      - username=${DB_USERNAME}
+      - password=${DB_PASSWORD}
+      - database=${DB_DATABASE_STAGE}
     depends_on:
       - postgresql-dev
     command: ["/app/wait-for-it.sh", "postgresql-dev:5432"]

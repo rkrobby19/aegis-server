@@ -1,14 +1,25 @@
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
+require('dotenv').config();
 
 module.exports = {
-  node_env: process.env.NODE_ENV,
-  dialect: process.env.DB_CONNECTION,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_DATABASE,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  define: {
-    freezeTableName: true,
+  development: {
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_CONNECTION,
+  },
+  stage: {
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE_STAGE,
+    host: process.env.DB_HOST_STAGE,
+    dialect: process.env.DB_CONNECTION,
+  },
+  production: {
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE_PRODUCTION,
+    host: process.env.DB_HOST_PRODUCTION,
+    dialect: process.env.DB_CONNECTION,
   },
 };
