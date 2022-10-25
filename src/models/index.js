@@ -1,17 +1,21 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
-import { pascalCase } from 'change-case';
-import config from '../configs/sequelize';
+import configs from '../configs/sequelize';
 
 const db = {};
 const basename = path.basename(__filename);
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config,
-);
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+
+const config = configs[env];
+
+let sequelize;
+if (env === 'production') {
+  // TODO: create connection to online database
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
 fs.readdirSync(__dirname)
   .filter(
@@ -23,7 +27,7 @@ fs.readdirSync(__dirname)
         sequelize,
         Sequelize.DataTypes,
       );
-      db[pascalCase(model.name)] = model;
+      db[model.name] = model;
     } catch (err) {}
   });
 
