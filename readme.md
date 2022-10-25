@@ -1,4 +1,4 @@
-# Aegis.
+# Aegis
 
 ## Description
 
@@ -32,8 +32,9 @@ Now you can start to install the dependencies, this project is pinned with [Volt
 $ pnpm install
 ```
 
-### Dependencies
+### Requirements
 
+- [Node.js](https://nodejs.org/en/)
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [make](https://linuxhint.com/install-make-ubuntu/)
 
@@ -83,6 +84,26 @@ make createdb
 make dropdb
 ```
 
+### Run the development server:
+
+- Run server
+
+```
+make rundev
+```
+
+- Created db
+
+```
+make createdbdev
+```
+
+- Drop database:
+
+```
+make dropdbdev
+```
+
 - Run db migration up all versions:
 
 ```
@@ -93,14 +114,6 @@ make migrateup
 
 ```
 make migratedown
-```
-
-### Run the development server:
-
-- Run server:
-
-```
-make start
 ```
 
 ## Development Flow
