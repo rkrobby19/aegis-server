@@ -2,7 +2,7 @@ name: Deploy to production
 
 on:
   push:
-    branches: ['master']
+    branches: ['dev']
 
 jobs:
   build:
@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
