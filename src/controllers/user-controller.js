@@ -2,6 +2,7 @@ import UserService from '../services/user-service';
 import BaseController from './base-controller';
 
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie');
 const { hashSync, compareSync } = require('bcrypt');
 const { User } = require('../models');
 
@@ -29,18 +30,20 @@ class UserController extends BaseController {
         fullname,
         email,
         password: hashSync(password, 10),
+        created_at: Date.now(),
       });
 
       res.status(200).send({
-        message: 'success',
+        message: 'Success',
         data: {
           id: data.id,
           username: data.username,
           email: data.email,
+          created_at: data.created_at,
         },
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       res.status(422).send({
         message: 'Failed to create user',
       });
@@ -50,28 +53,24 @@ class UserController extends BaseController {
   static login = async (req, res) => {
     const { username, password } = req.body;
 
-    // find user data
     const data = await User.findOne({
       where: {
         username,
       },
     });
 
-    // user not exist
     if (!data) {
       return res.status(404).send({
-        message: 'data tidak ditemukan',
+        message: 'Data not found',
       });
     }
 
-    // user exit but wrong password
     if (!compareSync(password, data.password)) {
       return res.status(401).send({
         message: 'Incorrect Password',
       });
     }
 
-    // oke
     const secret = process.env.SECRET;
     const payload = {
       id: data.id,
@@ -79,11 +78,16 @@ class UserController extends BaseController {
       email: data.email,
     };
 
-    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+    const token = jwt.sign(payload, secret, { expiresIn: 60 * 60 * 24 * 7 });
+    const setCookie = cookie.serialize('token', token);
+
+    res.setHeader('Set-Cookie', setCookie, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     return res.status(200).send({
-      message: 'success',
-      token: `Bearer ${token}`,
+      message: 'Success',
     });
   };
 }

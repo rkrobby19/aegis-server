@@ -6,6 +6,7 @@ specifiers:
   '@babel/node': ^7.19.1
   '@babel/preset-env': ^7.19.4
   bcrypt: ^5.1.0
+  cookie: ^0.5.0
   cors: ^2.8.5
   dotenv: ^16.0.3
   eslint: ^7.32.0 || ^8.2.0
@@ -28,6 +29,7 @@ specifiers:
 
 dependencies:
   bcrypt: 5.1.0
+  cookie: 0.5.0
   cors: 2.8.5
   dotenv: 16.0.3
   express: 4.18.2
