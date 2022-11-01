@@ -52,38 +52,6 @@ $ pnpm install
 | CONTAINER_NAME | Docker Container Name       |
 | DOCKER_IMAGE   | Docker Image Postgres       |
 
-### Setup infrastructure
-
-- Install all dependencies
-
-```
-pnpm install
-```
-
-- Create postgres container:
-
-```
-make postgres
-```
-
-- Start postgres container:
-
-```
-make startcontainer
-```
-
-- Create database:
-
-```
-make createdbdev
-```
-
-- Drop database:
-
-```
-make dropdbdev
-```
-
 ### Run the development server:
 
 - Run server
