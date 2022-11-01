@@ -9,10 +9,10 @@
     "format --write": "prettier --write ./src",
     "lint --check": "eslint ./src",
     "lint --fix": "eslint --fix ./src",
-    "start": "pnpm run build && node ./dist",
+    "start": "npm run build && node ./dist",
     "clean": "rm -rf dist && mkdir dist",
     "build-babel": "babel -d ./dist src -s",
-    "build": "pnpm run clean && pnpm run build-babel"
+    "build": "npm run clean && npm run build-babel"
   },
   "keywords": [],
   "author": "",

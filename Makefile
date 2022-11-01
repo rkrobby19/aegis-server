@@ -30,11 +30,5 @@ migratedown:
 dev:
 	pnpm dev
 
-stage:
-	docker compose --env-file .env -f docker-compose.dev.yml up --build
-
-stagedown:
-	docker compose --env-file .env -f docker-compose.dev.yml down -v
-
 .PHONY:
-	postgres startcontainer createdb createdbdev dropdb dropdbdev migrateup migratedown dev stage stagedown
+	postgres startcontainer createdb createdbdev dropdb dropdbdev migrateup migratedown dev

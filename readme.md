@@ -75,26 +75,6 @@ make startcontainer
 - Create database:
 
 ```
-make createdb
-```
-
-- Drop database:
-
-```
-make dropdb
-```
-
-### Run the development server:
-
-- Run server
-
-```
-make rundev
-```
-
-- Created db
-
-```
 make createdbdev
 ```
 
@@ -102,6 +82,26 @@ make createdbdev
 
 ```
 make dropdbdev
+```
+
+### Run the development server:
+
+- Run server
+
+```
+make dev
+```
+
+- Created db
+
+```
+make createdb
+```
+
+- Drop database:
+
+```
+make dropdb
 ```
 
 - Run db migration up all versions:
