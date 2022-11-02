@@ -21,10 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      fullname: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
       email: {
         unique: true,
         allowNull: false,
@@ -32,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       created_at: {
         type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

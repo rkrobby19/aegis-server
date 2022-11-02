@@ -11,10 +11,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      fullname: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
       email: {
         unique: true,
         allowNull: false,
@@ -26,6 +22,7 @@ module.exports = {
       },
       created_at: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('NOW()'),
       },
     });
   },
