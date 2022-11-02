@@ -1,4 +1,4 @@
-# fly.toml file generated for lacoste on 2022-11-01T15:20:44+07:00
+# fly.toml file generated for lacoste on 2022-11-02T16:26:04+07:00
 
 app = "lacoste"
 kill_signal = "SIGINT"
