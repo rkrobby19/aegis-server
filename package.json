@@ -9,7 +9,7 @@
     "format:write": "prettier --write ./src",
     "lint:check": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "start": "npm run build && node ./dist/index.js",
+    "start": "npm run build && node ./dist",
     "clean": "rm -rf dist && mkdir dist",
     "build-babel": "babel -d ./dist src -s",
     "build": "npm run clean && npm run build-babel"
@@ -36,8 +36,7 @@
     "lint-staged": "^13.0.3",
     "nodemon": "^2.0.20",
     "pg-hstore": "^2.3.4",
-    "prettier": "^2.7.1",
-    "sequelize-cli": "^6.5.1"
+    "prettier": "^2.7.1"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -47,6 +46,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.8.0",
-    "sequelize": "^6.25.2"
+    "sequelize": "^6.25.2",
+    "sequelize-cli": "^6.5.1"
   }
 }
