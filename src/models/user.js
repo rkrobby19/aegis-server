@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-import-module-exports
 import { Model } from 'sequelize';
 
 module.exports = (sequelize, DataTypes) => {
