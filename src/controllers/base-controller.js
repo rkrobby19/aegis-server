@@ -1,42 +1,17 @@
-import ERRORS from '../configs/errors';
+import errors from '../constants/errors';
 
 class BaseController {
   static getError = (err) => {
     switch (err.message) {
-      case ERRORS.USER_EMAIL_EXIST:
+      case errors.UserAlreadyExist:
         return {
           code: 400,
-          message: 'User email is already exist',
+          message: 'User is already exist',
         };
-      case ERRORS.USER_ID_NOT_EXIST:
+      case errors.IncompleteInput:
         return {
           code: 400,
-          message: 'User id is not exist',
-        };
-      case ERRORS.USERNAME_NOT_EXIST:
-        return {
-          code: 400,
-          message: 'Username is not exist',
-        };
-      case ERRORS.PASSOWRD_NOT_MATCH:
-        return {
-          code: 400,
-          message: 'Password is wrong',
-        };
-      case ERRORS.BAD_REQUEST:
-        return {
-          code: 400,
-          message: 'Bad request',
-        };
-      case ERRORS.NOT_FOUND:
-        return {
-          code: 400,
-          message: 'Not found',
-        };
-      case ERRORS.NOT_COMPLETED:
-        return {
-          code: 400,
-          message: 'Please fill the form',
+          message: 'Please fill in all fields.',
         };
       default:
         return {
@@ -44,6 +19,23 @@ class BaseController {
           message: 'Internal server error',
         };
     }
+  };
+
+  static reponseSuccess = (data = null, message = null) => {
+    const response = {
+      status: 'success',
+      code: 200,
+    };
+
+    if (data !== null) {
+      response.data = data;
+    }
+
+    if (message !== null) {
+      response.message = message;
+    }
+
+    return response;
   };
 }
 
