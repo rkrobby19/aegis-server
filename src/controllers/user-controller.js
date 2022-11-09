@@ -11,7 +11,7 @@ class UserController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).json(error);
+      return res.status(error.code).send(error);
     }
   };
 
@@ -30,9 +30,8 @@ class UserController extends BaseController {
       return res.send(this.reponseSuccess(user));
     } catch (err) {
       const error = this.getError(err);
-      return res.status(error.code).json({
-        error_message: error.message,
-      });
+
+      return res.status(error.code).send(error);
     }
   };
 
@@ -55,9 +54,8 @@ class UserController extends BaseController {
       return res.send(this.reponseSuccess());
     } catch (err) {
       const error = this.getError(err);
-      return res.status(error.code).json({
-        error_message: error.message,
-      });
+
+      return res.status(error.code).send(error);
     }
   };
 
@@ -72,8 +70,9 @@ class UserController extends BaseController {
 
       return res.send(this.reponseSuccess());
     } catch (err) {
-      console.log(err);
-      return null;
+      const error = this.getError(err);
+
+      return res.status(error.code).send(error);
     }
   };
 }

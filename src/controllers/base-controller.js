@@ -13,6 +13,11 @@ class BaseController {
           code: 400,
           message: errors.IncompleteInput,
         };
+      case errors.FailedToSignIn:
+        return {
+          code: 400,
+          message: errors.FailedToSignIn,
+        };
       case errors.NameAlreadyExists:
         return {
           code: 400,
