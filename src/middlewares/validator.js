@@ -1,4 +1,4 @@
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 import Services from '../constants/services';
 import Errors from '../constants/errors';
 import Request from '../constants/requests';
@@ -19,6 +19,21 @@ const validationRules = (service) => {
       return [
         body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
         body(Request.Password, Errors.PasswordEmpty).exists().notEmpty(),
+      ];
+    }
+
+    case Services.AddAccount: {
+      return [
+        body(Request.Name, Errors.NameEmpty).exists().notEmpty(),
+        body(Request.Name, Errors.NameOnlyLetters).isAlpha(),
+        body(Request.Balance, Errors.BalanceEmpty).notEmpty(),
+        body(Request.Currency, Errors.InvalidCurrency).isIn(['IDR', 'USD']),
+      ];
+    }
+
+    case Services.DeleteAccount: {
+      return [
+        param(Request.Id, Errors.InvalidId).isUUID(),
       ];
     }
 
