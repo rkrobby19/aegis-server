@@ -3,6 +3,10 @@ const Routes = {
   Register: '/register',
   Logout: '/logout',
   Users: '/users',
+
+  Account: '/account',
+  AccountId: '/account/:id',
+  Accounts: '/accounts',
 };
 
 export default Routes;
