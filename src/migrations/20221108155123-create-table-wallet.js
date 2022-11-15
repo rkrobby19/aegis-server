@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('accounts', {
+    await queryInterface.createTable('wallets', {
       id: {
         unique: true,
         primaryKey: true,
@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       currency: {
-        type: Sequelize.ENUM('IDR', 'USD'),
+        type: Sequelize.ENUM('idr', 'usd'),
         allowNull: false,
       },
       created_at: {
@@ -35,6 +35,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('accounts');
+    await queryInterface.dropTable('wallets');
   },
 };

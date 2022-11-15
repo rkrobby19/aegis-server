@@ -4,9 +4,15 @@ const Routes = {
   Logout: '/logout',
   Users: '/users',
 
-  Account: '/account',
-  AccountId: '/account/:id',
-  Accounts: '/accounts',
+  Wallet: '/wallet',
+  WalletId: '/wallet/:id',
+  Wallets: '/wallets',
+
+  Transaction: '/transaction',
+  TransactionId: '/transaction/:id',
+
+  Transfer: '/transfer',
+  TransferId: '/transfer/:id',
 };
 
 export default Routes;

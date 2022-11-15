@@ -1,14 +1,14 @@
-import AccountService from '../services/account-service';
+import WalletService from '../services/wallet-service';
 import BaseController from './base-controller';
 
-class AccountController extends BaseController {
-  static getAccounts = async (req, res) => {
+class WalletController extends BaseController {
+  static getWallets = async (req, res) => {
     try {
       const owner = req.decoded.id;
 
-      const accounts = await AccountService.getAccounts(owner);
+      const wallets = await WalletService.getWallets(owner);
 
-      return res.send(this.reponseSuccess(accounts));
+      return res.send(this.reponseSuccess(wallets));
     } catch (err) {
       const error = this.getError(err);
 
@@ -16,19 +16,19 @@ class AccountController extends BaseController {
     }
   };
 
-  static addAccount = async (req, res) => {
+  static addWallet = async (req, res) => {
     try {
       const { name, balance, currency } = req.body;
       const { id: userId } = req.decoded;
 
-      const account = await AccountService.addAccount({
+      const wallet = await WalletService.addWallet({
         name,
         balance,
         currency,
         userId,
       });
 
-      return res.send(this.reponseSuccess(account));
+      return res.send(this.reponseSuccess(wallet));
     } catch (err) {
       const error = this.getError(err);
 
@@ -36,10 +36,10 @@ class AccountController extends BaseController {
     }
   };
 
-  static deleteAccount = async (req, res) => {
+  static deleteWallet = async (req, res) => {
     try {
       const { id } = req.params;
-      await AccountService.deleteAccount(id);
+      await WalletService.deleteWallet(id);
 
       return res.send(this.reponseSuccess());
     } catch (err) {
@@ -49,4 +49,5 @@ class AccountController extends BaseController {
     }
   };
 }
-export default AccountController;
+
+export default WalletController;

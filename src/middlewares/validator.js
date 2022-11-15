@@ -22,18 +22,16 @@ const validationRules = (service) => {
       ];
     }
 
-    case Services.AddAccount: {
+    case Services.AddWallet: {
       return [
         body(Request.Name, Errors.NameEmpty).exists().notEmpty(),
-        body(Request.Name, Errors.NameOnlyLetters).isAlpha(),
         body(Request.Balance, Errors.BalanceEmpty).notEmpty(),
-        body(Request.Currency, Errors.InvalidCurrency).isIn(['IDR', 'USD']),
       ];
     }
 
-    case Services.DeleteAccount: {
+    case Services.DeleteWallet: {
       return [
-        param(Request.Id, Errors.InvalidId).isUUID(),
+        param(Request.Id, Errors.DataNotFound).isUUID(),
       ];
     }
 

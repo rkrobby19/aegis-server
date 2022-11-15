@@ -1,16 +1,15 @@
 import { Model } from 'sequelize';
 
 module.exports = (sequelize, DataTypes) => {
-  class Account extends Model {
+  class Wallet extends Model {
     static associate = (models) => {
-      const { User, Entry } = models;
+      const { User } = models;
 
-      Account.belongsTo(User, { foreignKey: 'user_id' });
-      Account.hasMany(Entry, { foreignKey: 'account_id' });
+      Wallet.belongsTo(User, { foreignKey: 'user_id' });
     };
   }
 
-  Account.init(
+  Wallet.init(
     {
       id: {
         unique: true,
@@ -29,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'SET NULL',
       },
       name: {
-        unique: true,
         allowNull: false,
         type: DataTypes.STRING,
       },
@@ -39,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       currency: {
         allowNull: false,
-        type: DataTypes.ENUM('IDR', 'USD'),
+        type: DataTypes.ENUM('idr', 'usd'),
       },
       created_at: {
         type: DataTypes.DATE,
@@ -49,9 +47,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       timestamps: false,
       underscored: true,
-      tableName: 'accounts',
+      tableName: 'wallets',
     },
   );
 
-  return Account;
+  return Wallet;
 };
