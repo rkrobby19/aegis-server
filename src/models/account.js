@@ -1,17 +1,16 @@
 import { Model } from 'sequelize';
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Account extends Model {
     static associate = (models) => {
-      const { Account } = models;
+      const { User, Entry } = models;
 
-      User.hasMany(Account, {
-        foreignKey: 'user_id',
-      });
+      Account.belongsTo(User, { foreignKey: 'user_id' });
+      Account.hasMany(Entry, { foreignKey: 'account_id' });
     };
   }
 
-  User.init(
+  Account.init(
     {
       id: {
         unique: true,
@@ -19,19 +18,28 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      username: {
+      user_id: {
+        type: DataTypes.UUID,
+        references: {
+          key: 'id',
+          model: {
+            tableName: 'users',
+          },
+        },
+        onDelete: 'SET NULL',
+      },
+      name: {
         unique: true,
         allowNull: false,
         type: DataTypes.STRING,
       },
-      password: {
+      balance: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
       },
-      email: {
-        unique: true,
+      currency: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('IDR', 'USD'),
       },
       created_at: {
         type: DataTypes.DATE,
@@ -41,9 +49,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       timestamps: false,
       underscored: true,
-      tableName: 'users',
+      tableName: 'accounts',
     },
   );
 
-  return User;
+  return Account;
 };

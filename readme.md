@@ -84,6 +84,12 @@ make migrateup
 make migratedown
 ```
 
+## API Documentation
+
+```
+https://documenter.getpostman.com/view/16991559/2s8YekREej
+```
+
 ## Development Flow
 
 Make sure to `fetch` the repository whenever you are starting to work to know the update for each remote repositories. And for any `new feature / bug fix` make sure to create branch from `develop` branch as it is for staging, `main` branch only used for production and `hot fix`

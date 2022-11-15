@@ -6,12 +6,32 @@ class BaseController {
       case errors.UserAlreadyExist:
         return {
           code: 400,
-          message: 'User is already exist',
+          message: errors.UserAlreadyExist,
         };
       case errors.IncompleteInput:
         return {
           code: 400,
-          message: 'Please fill in all fields.',
+          message: errors.IncompleteInput,
+        };
+      case errors.FailedToSignIn:
+        return {
+          code: 400,
+          message: errors.FailedToSignIn,
+        };
+      case errors.NameAlreadyExists:
+        return {
+          code: 400,
+          message: errors.NameAlreadyExists,
+        };
+      case errors.InvalidCurrency:
+        return {
+          code: 400,
+          message: errors.InvalidCurrency,
+        };
+      case errors.DataNotFound:
+        return {
+          code: 400,
+          message: errors.DataNotFound,
         };
       default:
         return {
