@@ -2,8 +2,8 @@ const Services = {
   Login: 'Login',
   RegisterUser: 'Register',
 
-  AddAccount: 'Create account',
-  DeleteAccount: 'Delete Account',
+  AddWallet: 'Create wallet',
+  DeleteWallet: 'Delete wallet',
 };
 
 export default Services;

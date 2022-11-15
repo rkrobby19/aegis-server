@@ -3,9 +3,9 @@ import { Model } from 'sequelize';
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate = (models) => {
-      const { Account } = models;
+      const { Wallet } = models;
 
-      User.hasMany(Account, {
+      User.hasMany(Wallet, {
         foreignKey: 'user_id',
       });
     };
