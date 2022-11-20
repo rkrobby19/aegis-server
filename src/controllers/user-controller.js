@@ -1,4 +1,5 @@
 import cookie from 'cookie';
+import Errors from '../constants/errors';
 import UserService from '../services/user-service';
 import BaseController from './base-controller';
 
@@ -17,9 +18,16 @@ class UserController extends BaseController {
 
   static registerUser = async (req, res) => {
     try {
-      const {
-        username, email, password,
-      } = req.body;
+      const { username, email, password } = req.body;
+
+      const getUser = await UserService.getUserByUsernameOrEmail({
+        username,
+        email,
+      });
+
+      if (getUser) {
+        throw new Error(Errors.UserAlreadyExist);
+      }
 
       const user = await UserService.registerUser({
         username,
@@ -39,8 +47,10 @@ class UserController extends BaseController {
     try {
       const { username, password } = req.body;
 
+      const user = await UserService.getUserByUsername({ username });
+
       const token = await UserService.loginUser({
-        username,
+        user,
         password,
       });
 
