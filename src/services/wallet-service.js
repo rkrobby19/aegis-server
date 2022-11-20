@@ -1,28 +1,43 @@
-import Errors from '../constants/errors';
-import { Wallet } from '../models';
+import { Op } from 'sequelize';
+import { Wallet, Currency } from '../models';
 
 class WalletService {
   static getWallets = async (id) => Wallet.findAll({
     where: {
       user_id: id,
     },
+    include: [{
+      model: Currency,
+      as: 'currencies',
+      attributes: ['code'],
+    }],
+  });
+
+  static getWalletByID = async (userId, id) => Wallet.findOne({
+    where: {
+      user_id: userId,
+      [Op.and]: { id },
+    },
+    include: [{
+      model: Currency,
+      as: 'currencies',
+      attributes: ['code'],
+    }],
   });
 
   static addWallet = async ({
     name,
     balance,
-    currency,
+    currencyId,
     userId,
   }) => {
-    const wallet = await Wallet.create({
+    Wallet.create({
       name,
       balance,
-      currency,
+      currency_id: currencyId,
       user_id: userId,
       created_at: Date.now(),
     });
-
-    return wallet;
   };
 
   static updateWalletBalance = async ({
@@ -41,16 +56,8 @@ class WalletService {
     return balanceUpdate;
   };
 
-  static deleteWallet = async (id) => {
-    const wallet = await Wallet.findOne({
-      where: { id },
-    });
-
-    if (!wallet) {
-      throw new Error(Errors.DataNotFound);
-    }
-
-    return wallet.destroy();
+  static deleteWallet = async (wallet) => {
+    wallet.destroy();
   };
 }
 

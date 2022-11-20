@@ -16,6 +16,15 @@ module.exports = {
           },
         },
       },
+      currency_id: {
+        type: Sequelize.UUID,
+        references: {
+          key: 'id',
+          model: {
+            tableName: 'currencies',
+          },
+        },
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING,
@@ -23,10 +32,6 @@ module.exports = {
       balance: {
         allowNull: false,
         type: Sequelize.INTEGER,
-      },
-      currency: {
-        type: Sequelize.ENUM('idr', 'usd'),
-        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,

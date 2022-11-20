@@ -3,9 +3,10 @@ import { Model } from 'sequelize';
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
     static associate = (models) => {
-      const { User } = models;
+      const { User, Currency } = models;
 
-      Wallet.belongsTo(User, { foreignKey: 'user_id' });
+      Wallet.belongsTo(User, { as: 'users', foreignKey: 'user_id' });
+      Wallet.belongsTo(Currency, { as: 'currencies', foreignKey: 'currency_id' });
     };
   }
 
@@ -27,6 +28,16 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: 'SET NULL',
       },
+      currency_id: {
+        type: DataTypes.UUID,
+        references: {
+          key: 'id',
+          model: {
+            tableName: 'currencies',
+          },
+        },
+        onDelete: 'SET NULL',
+      },
       name: {
         allowNull: false,
         type: DataTypes.STRING,
@@ -34,10 +45,6 @@ module.exports = (sequelize, DataTypes) => {
       balance: {
         allowNull: false,
         type: DataTypes.INTEGER,
-      },
-      currency: {
-        allowNull: false,
-        type: DataTypes.ENUM('idr', 'usd'),
       },
       created_at: {
         type: DataTypes.DATE,
