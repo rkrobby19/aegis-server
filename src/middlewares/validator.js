@@ -8,8 +8,7 @@ const validationRules = (service) => {
     case Services.RegisterUser: {
       return [
         body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
-        body(Request.Email, Errors.EmailEmpty).exists().notEmpty(),
-        body(Request.Email, Errors.InvalidEmail).exists().isEmail(),
+        body(Request.Email, Errors.InvalidEmail).isEmail(),
         body(Request.Password, Errors.PasswordEmpty).exists(),
         body(Request.Password, Errors.LengthPassword).isLength({ min: 8 }),
       ];
@@ -30,9 +29,7 @@ const validationRules = (service) => {
     }
 
     case Services.DeleteWallet: {
-      return [
-        param(Request.Id, Errors.DataNotFound).isUUID(),
-      ];
+      return [param(Request.Id, Errors.DataNotFound).isUUID()];
     }
 
     default: {
@@ -49,7 +46,7 @@ const validate = (req, res, next) => {
   const extractedErrors = [];
   errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
 
-  return res.status(422).json({
+  return res.status(400).json({
     errors: extractedErrors,
   });
 };

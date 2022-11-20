@@ -7,14 +7,20 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "extends": ["plugin:react/recommended", "prettier", "airbnb"],
+  "extends": [
+    "plugin:react/recommended",
+    "prettier",
+    "airbnb"
+  ],
   "overrides": [],
   "settings": {
     "react": {
       "version": "999.999.999"
     }
   },
-  "plugins": ["react"],
+  "plugins": [
+    "react"
+  ],
   "rules": {
     "no-console": 0,
     "import/no-import-module-exports": 0,
