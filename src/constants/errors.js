@@ -15,12 +15,17 @@ const Errors = {
   UserNotFound: 'User not found',
   UsernameEmpty: 'Username cannot be empty',
 
-  InvalidCurrency: 'Currency must be either both IDR and USD',
+  InvalidCurrency: 'Currency must be IDR',
   InvalidId: 'Invalid ID',
   NameEmpty: 'Name cannot be empty',
   NameOnlyLetters: 'Name contains only letters',
   NameAlreadyExists: 'Name already exists',
   BalanceEmpty: 'Balance cannot be empty',
+  WalletNotFound: 'Wallet not found',
+  UnableToDeleteWallet: 'Unable to delete a wallet',
+
+  InvalidTypeTransaction: 'Transaction must be either bot expense, income, and transfer',
+  FailedToCreateTransaction: 'Failed to create a transaction',
 };
 
 export default Errors;

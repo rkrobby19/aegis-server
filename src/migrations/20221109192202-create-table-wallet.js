@@ -16,14 +16,10 @@ module.exports = {
           },
         },
       },
-      currency_id: {
-        type: Sequelize.UUID,
-        references: {
-          key: 'id',
-          model: {
-            tableName: 'currencies',
-          },
-        },
+      currency: {
+        allowNull: false,
+        type: Sequelize.ENUM('IDR'),
+        defaultValue: 'IDR',
       },
       name: {
         allowNull: false,
@@ -32,9 +28,11 @@ module.exports = {
       balance: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       created_at: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('now'),
       },
     });
   },

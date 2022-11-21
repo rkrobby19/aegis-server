@@ -1,5 +1,4 @@
 import Errors from '../constants/errors';
-import CurrencyService from '../services/currency-service';
 import WalletService from '../services/wallet-service';
 import BaseController from './base-controller';
 
@@ -24,9 +23,8 @@ class WalletController extends BaseController {
       const { id } = req.params;
 
       const wallet = await WalletService.getWalletByID(userId, id);
-
       if (!wallet) {
-        throw new Error(Errors.DataNotFound);
+        throw new Error(Errors.WalletNotFound);
       }
 
       return res.send(this.reponseSuccess(wallet));
@@ -39,20 +37,13 @@ class WalletController extends BaseController {
 
   static addWallet = async (req, res) => {
     try {
-      const { name, balance, currency_id: currencyId } = req.body;
+      const { name, balance, currency } = req.body;
       const { id: userId } = req.decoded;
-
-      const currency = await CurrencyService.getCurrencyByID(currencyId);
-      console.log(currency);
-
-      if (!currency) {
-        throw new Error(Errors.DataNotFound);
-      }
 
       const wallet = await WalletService.addWallet({
         name,
         balance,
-        currencyId,
+        currency,
         userId,
       });
 
@@ -70,6 +61,15 @@ class WalletController extends BaseController {
       const { id } = req.params;
 
       const wallet = await WalletService.getWalletByID(userId, id);
+      if (!wallet) {
+        throw new Error(Errors.WalletNotFound);
+      }
+
+      const wallets = await WalletService.getWallets(userId);
+      if (wallets.length <= 1) {
+        throw new Error(Errors.UnableToDeleteWallet);
+      }
+
       await WalletService.deleteWallet(wallet);
 
       return res.send(this.reponseSuccess());

@@ -8,6 +8,7 @@ const validationRules = (service) => {
     case Services.RegisterUser: {
       return [
         body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
+        body(Request.Email, Errors.EmailEmpty).exists().notEmpty(),
         body(Request.Email, Errors.InvalidEmail).isEmail(),
         body(Request.Password, Errors.PasswordEmpty).exists(),
         body(Request.Password, Errors.LengthPassword).isLength({ min: 8 }),
@@ -24,12 +25,16 @@ const validationRules = (service) => {
     case Services.AddWallet: {
       return [
         body(Request.Name, Errors.NameEmpty).exists().notEmpty(),
-        body(Request.Balance, Errors.BalanceEmpty).notEmpty(),
+        body(Request.Currency, Errors.InvalidCurrency).isIn('IDR'),
       ];
     }
 
     case Services.DeleteWallet: {
-      return [param(Request.Id, Errors.DataNotFound).isUUID()];
+      return [param(Request.Id, Errors.WalletNotFound).isUUID()];
+    }
+
+    case Services.AddTransaction: {
+      return [body(Request.TypeTransaction, Errors.InvalidTypeTransaction).isIn('expense', 'income', 'transfer')];
     }
 
     default: {
@@ -44,11 +49,11 @@ const validate = (req, res, next) => {
     return next();
   }
   const extractedErrors = [];
-  errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
+  errors.array().map((err) => extractedErrors.push({ code: 400, message: err.msg }));
 
-  return res.status(400).json({
-    errors: extractedErrors,
-  });
+  return res.status(400).send(
+    extractedErrors[0],
+  );
 };
 
 module.exports = {
