@@ -1,4 +1,7 @@
 const Requests = {
+  SetCookie: 'Set-Cookie',
+  Token: 'token',
+
   Id: 'id',
   Username: 'username',
   Email: 'email',
@@ -7,6 +10,8 @@ const Requests = {
   Balance: 'balance',
   Currency: 'currency',
   Name: 'name',
+
+  TypeTransaction: 'type',
 };
 
 export default Requests;

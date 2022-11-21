@@ -1,6 +1,8 @@
 import cookie from 'cookie';
 import Errors from '../constants/errors';
+import Requests from '../constants/requests';
 import UserService from '../services/user-service';
+import WalletService from '../services/wallet-service';
 import BaseController from './base-controller';
 
 class UserController extends BaseController {
@@ -35,6 +37,11 @@ class UserController extends BaseController {
         password,
       });
 
+      await WalletService.addWallet({
+        name: 'Cash',
+        userId: user.dataValues.id,
+      });
+
       return res.send(this.reponseSuccess(user));
     } catch (err) {
       const error = this.getError(err);
@@ -54,14 +61,16 @@ class UserController extends BaseController {
         password,
       });
 
-      const setCookie = cookie.serialize('token', token);
+      const wallet = await WalletService.getWallets(user.dataValues.id);
 
-      res.setHeader('Set-Cookie', setCookie, {
+      const setCookie = cookie.serialize(Requests.Token, token);
+
+      res.setHeader(Requests.SetCookie, setCookie, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7,
       });
 
-      return res.send(this.reponseSuccess());
+      return res.send(this.reponseSuccess(wallet[0]));
     } catch (err) {
       const error = this.getError(err);
 
@@ -71,9 +80,9 @@ class UserController extends BaseController {
 
   static logout = async (req, res) => {
     try {
-      const setCookie = cookie.serialize('token', null);
+      const setCookie = cookie.serialize(Requests.Token, null);
 
-      res.setHeader('Set-Cookie', setCookie, {
+      res.setHeader(Requests.SetCookie, setCookie, {
         httpOnly: true,
         maxAge: -1,
       });

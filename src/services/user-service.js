@@ -27,14 +27,11 @@ class UserService {
     username,
     email,
     password,
-  }) => {
-    await User.create({
-      username,
-      email,
-      password: hashSync(password, 10),
-      created_at: Date.now(),
-    });
-  };
+  }) => User.create({
+    username,
+    email,
+    password: hashSync(password, 10),
+  });
 
   static loginUser = async ({
     user,
