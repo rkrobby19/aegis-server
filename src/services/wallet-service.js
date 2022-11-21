@@ -1,16 +1,12 @@
 import { Op } from 'sequelize';
-import { Wallet, Currency } from '../models';
+import constants from '../constants';
+import { Wallet } from '../models';
 
 class WalletService {
   static getWallets = async (id) => Wallet.findAll({
     where: {
       user_id: id,
     },
-    include: [{
-      model: Currency,
-      as: 'currencies',
-      attributes: ['code'],
-    }],
   });
 
   static getWalletByID = async (userId, id) => Wallet.findOne({
@@ -18,37 +14,39 @@ class WalletService {
       user_id: userId,
       [Op.and]: { id },
     },
-    include: [{
-      model: Currency,
-      as: 'currencies',
-      attributes: ['code'],
-    }],
+  });
+
+  static getWalletByCurrency = async (userId, currency, walletId) => Wallet.findAll({
+    where: {
+      user_id: userId,
+      [Op.and]: { currency },
+      id: {
+        [Op.not]: walletId,
+      },
+    },
   });
 
   static addWallet = async ({
     name,
     balance,
-    currencyId,
+    currency,
     userId,
-  }) => {
-    Wallet.create({
-      name,
-      balance,
-      currency_id: currencyId,
-      user_id: userId,
-      created_at: Date.now(),
-    });
-  };
+  }) => Wallet.create({
+    name,
+    balance,
+    currency,
+    user_id: userId,
+  });
 
   static updateWalletBalance = async ({
     walletId, toWalletId, amount, type,
   }) => {
     let balanceUpdate;
-    if (type === 'expense') {
+    if (type === constants.Expense) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
-    } else if (type === 'income') {
+    } else if (type === constants.Income) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
-    } else if (type === 'transfer') {
+    } else if (type === constants.Transfer) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: toWalletId } });
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
     }

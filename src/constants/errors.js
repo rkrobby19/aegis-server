@@ -22,9 +22,11 @@ const Errors = {
   NameAlreadyExists: 'Name already exists',
   BalanceEmpty: 'Balance cannot be empty',
   WalletNotFound: 'Wallet not found',
+  DestinationWalletEmpty: 'Destination transfer cannot be empty',
+  DestinationWalletNotFound: 'Destination transfer not found',
   UnableToDeleteWallet: 'Unable to delete a wallet',
 
-  InvalidTypeTransaction: 'Transaction must be either bot expense, income, and transfer',
+  InvalidTypeTransaction: 'Transaction must be either both expense, income, and transfer',
   FailedToCreateTransaction: 'Failed to create a transaction',
 };
 

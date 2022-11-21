@@ -1,40 +1,43 @@
 import { body, param, validationResult } from 'express-validator';
 import Services from '../constants/services';
 import Errors from '../constants/errors';
-import Request from '../constants/requests';
+import constants from '../constants';
 
 const validationRules = (service) => {
   switch (service) {
     case Services.RegisterUser: {
       return [
-        body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
-        body(Request.Email, Errors.EmailEmpty).exists().notEmpty(),
-        body(Request.Email, Errors.InvalidEmail).isEmail(),
-        body(Request.Password, Errors.PasswordEmpty).exists(),
-        body(Request.Password, Errors.LengthPassword).isLength({ min: 8 }),
+        body(constants.Username, Errors.UsernameEmpty).exists().notEmpty(),
+        body(constants.Email, Errors.EmailEmpty).exists().notEmpty(),
+        body(constants.Email, Errors.InvalidEmail).isEmail(),
+        body(constants.Password, Errors.PasswordEmpty).exists(),
+        body(constants.Password, Errors.LengthPassword).isLength({ min: 8 }),
       ];
     }
 
     case Services.Login: {
       return [
-        body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
-        body(Request.Password, Errors.PasswordEmpty).exists().notEmpty(),
+        body(constants.Username, Errors.UsernameEmpty).exists().notEmpty(),
+        body(constants.Password, Errors.PasswordEmpty).exists().notEmpty(),
       ];
     }
 
     case Services.AddWallet: {
       return [
-        body(Request.Name, Errors.NameEmpty).exists().notEmpty(),
-        body(Request.Currency, Errors.InvalidCurrency).isIn('IDR'),
+        body(constants.Name, Errors.NameEmpty).exists().notEmpty(),
+        body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
       ];
     }
 
     case Services.DeleteWallet: {
-      return [param(Request.Id, Errors.WalletNotFound).isUUID()];
+      return [param(constants.Id, Errors.WalletNotFound).isUUID()];
     }
 
     case Services.AddTransaction: {
-      return [body(Request.TypeTransaction, Errors.InvalidTypeTransaction).isIn('expense', 'income', 'transfer')];
+      return [
+        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn(['expense', 'income', 'transfer']),
+        body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
+      ];
     }
 
     default: {

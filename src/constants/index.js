@@ -1,4 +1,4 @@
-const Requests = {
+module.exports = {
   SetCookie: 'Set-Cookie',
   Token: 'token',
 
@@ -12,6 +12,7 @@ const Requests = {
   Name: 'name',
 
   TypeTransaction: 'type',
+  Transfer: 'transfer',
+  Income: 'income',
+  Expense: 'expense',
 };
-
-export default Requests;

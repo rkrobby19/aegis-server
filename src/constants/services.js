@@ -4,6 +4,9 @@ const Services = {
 
   AddWallet: 'Create wallet',
   DeleteWallet: 'Delete wallet',
+
+  GetDataByID: 'Get Data By ID',
+  AddTransaction: 'Add transaction',
 };
 
 export default Services;

@@ -1,6 +1,6 @@
 import cookie from 'cookie';
+import constants from '../constants';
 import Errors from '../constants/errors';
-import Requests from '../constants/requests';
 import UserService from '../services/user-service';
 import WalletService from '../services/wallet-service';
 import BaseController from './base-controller';
@@ -63,9 +63,9 @@ class UserController extends BaseController {
 
       const wallet = await WalletService.getWallets(user.dataValues.id);
 
-      const setCookie = cookie.serialize(Requests.Token, token);
+      const setCookie = cookie.serialize(constants.Token, token);
 
-      res.setHeader(Requests.SetCookie, setCookie, {
+      res.setHeader(constants.SetCookie, setCookie, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7,
       });
@@ -80,9 +80,9 @@ class UserController extends BaseController {
 
   static logout = async (req, res) => {
     try {
-      const setCookie = cookie.serialize(Requests.Token, null);
+      const setCookie = cookie.serialize(constants.Token, null);
 
-      res.setHeader(Requests.SetCookie, setCookie, {
+      res.setHeader(constants.SetCookie, setCookie, {
         httpOnly: true,
         maxAge: -1,
       });
