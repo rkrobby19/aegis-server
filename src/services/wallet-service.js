@@ -57,6 +57,21 @@ class WalletService {
   static deleteWallet = async (wallet) => {
     wallet.destroy();
   };
+
+  static updateWallet = async (id, {
+    name,
+    balance,
+    currency,
+  }) => Wallet.update(
+    {
+      name,
+      balance,
+      currency,
+    },
+    {
+      where: { id },
+    },
+  );
 }
 
 export default WalletService;

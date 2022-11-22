@@ -1,12 +1,13 @@
 const Services = {
-  Login: 'Login',
-  RegisterUser: 'Register',
+  Login: 'login',
+  RegisterUser: 'register',
 
-  AddWallet: 'Create wallet',
-  DeleteWallet: 'Delete wallet',
+  AddWallet: 'create wallet',
+  DeleteWallet: 'delete wallet',
+  UpdateWallet: 'update wallet',
 
-  GetDataByID: 'Get Data By ID',
-  AddTransaction: 'Add transaction',
+  GetDataByID: 'get Data By ID',
+  AddTransaction: 'add transaction',
 };
 
 export default Services;

@@ -29,6 +29,14 @@ const validationRules = (service) => {
       ];
     }
 
+    case Services.UpdateWallet: {
+      return [
+        body(constants.Name, Errors.NameEmpty).notEmpty(),
+        body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
+        param(constants.Id, Errors.WalletNotFound).isUUID(),
+      ];
+    }
+
     case Services.DeleteWallet: {
       return [param(constants.Id, Errors.WalletNotFound).isUUID()];
     }

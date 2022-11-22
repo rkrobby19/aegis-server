@@ -34,6 +34,11 @@ router.delete(
   [validationRules(Services.DeleteWallet), validate, Middleware.Auth],
   WalletController.deleteWallet,
 );
+router.put(
+  Routes.WalletId,
+  [validationRules(Services.UpdateWallet), validate, Middleware.Auth],
+  WalletController.updateWallet,
+);
 
 router.post(
   Routes.Transaction,
