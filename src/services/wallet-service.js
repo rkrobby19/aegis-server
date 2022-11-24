@@ -1,4 +1,5 @@
-import Errors from '../constants/errors';
+import { Op } from 'sequelize';
+import constants from '../constants';
 import { Wallet } from '../models';
 
 class WalletService {
@@ -8,32 +9,44 @@ class WalletService {
     },
   });
 
+  static getWalletByID = async (userId, id) => Wallet.findOne({
+    where: {
+      user_id: userId,
+      [Op.and]: { id },
+    },
+  });
+
+  static getWalletByCurrency = async (userId, currency, walletId) => Wallet.findAll({
+    where: {
+      user_id: userId,
+      [Op.and]: { currency },
+      id: {
+        [Op.not]: walletId,
+      },
+    },
+  });
+
   static addWallet = async ({
     name,
     balance,
     currency,
     userId,
-  }) => {
-    const wallet = await Wallet.create({
-      name,
-      balance,
-      currency,
-      user_id: userId,
-      created_at: Date.now(),
-    });
-
-    return wallet;
-  };
+  }) => Wallet.create({
+    name,
+    balance,
+    currency,
+    user_id: userId,
+  });
 
   static updateWalletBalance = async ({
     walletId, toWalletId, amount, type,
   }) => {
     let balanceUpdate;
-    if (type === 'expense') {
+    if (type === constants.Expense) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
-    } else if (type === 'income') {
+    } else if (type === constants.Income) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
-    } else if (type === 'transfer') {
+    } else if (type === constants.Transfer) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: toWalletId } });
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
     }
@@ -41,17 +54,24 @@ class WalletService {
     return balanceUpdate;
   };
 
-  static deleteWallet = async (id) => {
-    const wallet = await Wallet.findOne({
-      where: { id },
-    });
-
-    if (!wallet) {
-      throw new Error(Errors.DataNotFound);
-    }
-
-    return wallet.destroy();
+  static deleteWallet = async (wallet) => {
+    wallet.destroy();
   };
+
+  static updateWallet = async (id, {
+    name,
+    balance,
+    currency,
+  }) => Wallet.update(
+    {
+      name,
+      balance,
+      currency,
+    },
+    {
+      where: { id },
+    },
+  );
 }
 
 export default WalletService;

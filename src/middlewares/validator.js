@@ -1,37 +1,50 @@
 import { body, param, validationResult } from 'express-validator';
 import Services from '../constants/services';
 import Errors from '../constants/errors';
-import Request from '../constants/requests';
+import constants from '../constants';
 
 const validationRules = (service) => {
   switch (service) {
     case Services.RegisterUser: {
       return [
-        body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
-        body(Request.Email, Errors.EmailEmpty).exists().notEmpty(),
-        body(Request.Email, Errors.InvalidEmail).exists().isEmail(),
-        body(Request.Password, Errors.PasswordEmpty).exists(),
-        body(Request.Password, Errors.LengthPassword).isLength({ min: 8 }),
+        body(constants.Username, Errors.UsernameEmpty).exists().notEmpty(),
+        body(constants.Email, Errors.EmailEmpty).exists().notEmpty(),
+        body(constants.Email, Errors.InvalidEmail).isEmail(),
+        body(constants.Password, Errors.PasswordEmpty).exists(),
+        body(constants.Password, Errors.LengthPassword).isLength({ min: 8 }),
       ];
     }
 
     case Services.Login: {
       return [
-        body(Request.Username, Errors.UsernameEmpty).exists().notEmpty(),
-        body(Request.Password, Errors.PasswordEmpty).exists().notEmpty(),
+        body(constants.Username, Errors.UsernameEmpty).exists().notEmpty(),
+        body(constants.Password, Errors.PasswordEmpty).exists().notEmpty(),
       ];
     }
 
     case Services.AddWallet: {
       return [
-        body(Request.Name, Errors.NameEmpty).exists().notEmpty(),
-        body(Request.Balance, Errors.BalanceEmpty).notEmpty(),
+        body(constants.Name, Errors.NameEmpty).exists().notEmpty(),
+        body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
+      ];
+    }
+
+    case Services.UpdateWallet: {
+      return [
+        body(constants.Name, Errors.NameEmpty).notEmpty(),
+        body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
+        param(constants.Id, Errors.WalletNotFound).isUUID(),
       ];
     }
 
     case Services.DeleteWallet: {
+      return [param(constants.Id, Errors.WalletNotFound).isUUID()];
+    }
+
+    case Services.AddTransaction: {
       return [
-        param(Request.Id, Errors.DataNotFound).isUUID(),
+        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn(['expense', 'income', 'transfer']),
+        body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
       ];
     }
 
@@ -47,11 +60,11 @@ const validate = (req, res, next) => {
     return next();
   }
   const extractedErrors = [];
-  errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
+  errors.array().map((err) => extractedErrors.push({ code: 400, message: err.msg }));
 
-  return res.status(422).json({
-    errors: extractedErrors,
-  });
+  return res.status(400).send(
+    extractedErrors[0],
+  );
 };
 
 module.exports = {

@@ -1,15 +1,15 @@
 import { Model } from 'sequelize';
 
 module.exports = (sequelize, DataTypes) => {
-  class Wallet extends Model {
+  class Transaction extends Model {
     static associate = (models) => {
-      const { User } = models;
+      const { Wallet } = models;
 
-      Wallet.belongsTo(User, { as: 'users', foreignKey: 'user_id' });
+      Transaction.belongsTo(Wallet, { as: 'wallets', foreignKey: 'wallet_id' });
     };
   }
 
-  Wallet.init(
+  Transaction.init(
     {
       id: {
         unique: true,
@@ -17,31 +17,44 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      user_id: {
+      wallet_id: {
         type: DataTypes.UUID,
         references: {
           key: 'id',
           model: {
-            tableName: 'users',
+            tableName: 'wallets',
           },
         },
-        onDelete: 'SET NULL',
       },
-      name: {
-        allowNull: false,
-        type: DataTypes.STRING,
+      to_wallet_id: {
+        type: DataTypes.UUID,
+        references: {
+          key: 'id',
+          model: {
+            tableName: 'wallets',
+          },
+        },
       },
       currency: {
         allowNull: false,
         type: DataTypes.ENUM('IDR'),
         defaultValue: 'IDR',
       },
-      balance: {
+      type: {
+        allowNull: false,
+        type: DataTypes.ENUM('expense', 'income', 'transfer'),
+        defaultValue: 'expense',
+      },
+      note: {
+        type: DataTypes.STRING,
+      },
+      amount: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       created_at: {
+        allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
@@ -50,9 +63,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       timestamps: false,
       underscored: true,
-      tableName: 'wallets',
+      tableName: 'transactions',
     },
   );
 
-  return Wallet;
+  return Transaction;
 };

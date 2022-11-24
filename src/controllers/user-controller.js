@@ -1,5 +1,8 @@
 import cookie from 'cookie';
+import constants from '../constants';
+import Errors from '../constants/errors';
 import UserService from '../services/user-service';
+import WalletService from '../services/wallet-service';
 import BaseController from './base-controller';
 
 class UserController extends BaseController {
@@ -17,14 +20,26 @@ class UserController extends BaseController {
 
   static registerUser = async (req, res) => {
     try {
-      const {
-        username, email, password,
-      } = req.body;
+      const { username, email, password } = req.body;
+
+      const getUser = await UserService.getUserByUsernameOrEmail({
+        username,
+        email,
+      });
+
+      if (getUser) {
+        throw new Error(Errors.UserAlreadyExist);
+      }
 
       const user = await UserService.registerUser({
         username,
         email,
         password,
+      });
+
+      await WalletService.addWallet({
+        name: 'Cash',
+        userId: user.dataValues.id,
       });
 
       return res.send(this.reponseSuccess(user));
@@ -39,19 +54,23 @@ class UserController extends BaseController {
     try {
       const { username, password } = req.body;
 
+      const user = await UserService.getUserByUsername({ username });
+
       const token = await UserService.loginUser({
-        username,
+        user,
         password,
       });
 
-      const setCookie = cookie.serialize('token', token);
+      const wallet = await WalletService.getWallets(user.dataValues.id);
 
-      res.setHeader('Set-Cookie', setCookie, {
+      const setCookie = cookie.serialize(constants.Token, token);
+
+      res.setHeader(constants.SetCookie, setCookie, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7,
       });
 
-      return res.send(this.reponseSuccess());
+      return res.send(this.reponseSuccess(wallet[0]));
     } catch (err) {
       const error = this.getError(err);
 
@@ -61,9 +80,9 @@ class UserController extends BaseController {
 
   static logout = async (req, res) => {
     try {
-      const setCookie = cookie.serialize('token', null);
+      const setCookie = cookie.serialize(constants.Token, null);
 
-      res.setHeader('Set-Cookie', setCookie, {
+      res.setHeader(constants.SetCookie, setCookie, {
         httpOnly: true,
         maxAge: -1,
       });

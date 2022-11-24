@@ -22,7 +22,7 @@ module.exports = {
       },
       created_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('NOW()'),
+        defaultValue: Sequelize.fn('now'),
       },
     });
   },

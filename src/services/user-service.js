@@ -7,39 +7,36 @@ import Jwt from '../utils/jwt';
 class UserService {
   static getUsers = () => User.findAll();
 
-  static registerUser = async ({
-    username,
-    email,
-    password,
-  }) => {
-    const oldUser = await User.findOne({
-      where: or({ email }, { username }),
-    });
-
-    if (oldUser) {
-      throw new Error(errors.UserAlreadyExist);
-    }
-
-    const user = await User.create({
-      username,
-      email,
-      password: hashSync(password, 10),
-      created_at: Date.now(),
+  static getUserByUsernameOrEmail = async ({ username, email }) => {
+    const user = await User.findOne({
+      where: or({ username }, { email }),
     });
 
     return user;
   };
 
-  static loginUser = async ({
-    username,
-    password,
-  }) => {
+  static getUserByUsername = async ({ username }) => {
     const user = await User.findOne({
-      where: {
-        username,
-      },
+      where: { username },
     });
 
+    return user;
+  };
+
+  static registerUser = async ({
+    username,
+    email,
+    password,
+  }) => User.create({
+    username,
+    email,
+    password: hashSync(password, 10),
+  });
+
+  static loginUser = async ({
+    user,
+    password,
+  }) => {
     if (!user || !compareSync(password, user.password)) {
       throw new Error(errors.FailedToSignIn);
     }

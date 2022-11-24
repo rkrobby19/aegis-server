@@ -1,37 +1,10 @@
-import errors from '../constants/errors';
-
 class BaseController {
   static getError = (err) => {
     switch (err.message) {
-      case errors.UserAlreadyExist:
+      case err.message:
         return {
           code: 400,
-          message: errors.UserAlreadyExist,
-        };
-      case errors.IncompleteInput:
-        return {
-          code: 400,
-          message: errors.IncompleteInput,
-        };
-      case errors.FailedToSignIn:
-        return {
-          code: 400,
-          message: errors.FailedToSignIn,
-        };
-      case errors.NameAlreadyExists:
-        return {
-          code: 400,
-          message: errors.NameAlreadyExists,
-        };
-      case errors.InvalidCurrency:
-        return {
-          code: 400,
-          message: errors.InvalidCurrency,
-        };
-      case errors.DataNotFound:
-        return {
-          code: 400,
-          message: errors.DataNotFound,
+          message: err.message,
         };
       default:
         return {
@@ -43,8 +16,8 @@ class BaseController {
 
   static reponseSuccess = (data = null, message = null) => {
     const response = {
-      status: 'success',
       code: 200,
+      message: 'success',
     };
 
     if (data !== null) {

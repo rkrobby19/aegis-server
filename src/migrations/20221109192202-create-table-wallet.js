@@ -16,6 +16,11 @@ module.exports = {
           },
         },
       },
+      currency: {
+        allowNull: false,
+        type: Sequelize.ENUM('IDR'),
+        defaultValue: 'IDR',
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING,
@@ -23,13 +28,11 @@ module.exports = {
       balance: {
         allowNull: false,
         type: Sequelize.INTEGER,
-      },
-      currency: {
-        type: Sequelize.ENUM('idr', 'usd'),
-        allowNull: false,
+        defaultValue: 0,
       },
       created_at: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('now'),
       },
     });
   },
