@@ -63,12 +63,13 @@ class UserController extends BaseController {
 
       const wallet = await WalletService.getWallets(user.dataValues.id);
 
-      const setCookie = cookie.serialize(constants.Token, token);
-
-      res.setHeader(constants.SetCookie, setCookie, {
+      const serialized = cookie.serialize(constants.Token, token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7,
+        path: '/',
       });
+
+      res.setHeader(constants.SetCookie, serialized);
 
       return res.send(this.reponseSuccess(wallet[0]));
     } catch (err) {
