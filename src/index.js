@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import api from './routes/apis';
 import { port } from './configs';
+import Errors from './constants/errors';
 
 const app = express();
 const whitelist = ['http://localhost:3000', 'https://stage-aegis.vercel.app'];
@@ -10,10 +11,10 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(Errors.NotAllowedByCORS));
     }
   },
   credentials: true,

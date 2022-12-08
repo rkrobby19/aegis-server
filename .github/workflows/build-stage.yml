@@ -16,6 +16,9 @@ jobs:
         run: |
           touch .env
           echo APP_PORT=${{ secrets.APP_PORT }} >> .env
+          echo FE_LOCAL_HOST=${{ secrets.FE_LOCAL_HOST }} >> .env
+          echo FE_STAGING_HOST=${{ secrets.FE_STAGING_HOST }} >> .env
+          echo SECRET=${{ secrets.JWT_SECRET_KEY }} >> .env
           echo DB_URL=${{ secrets.DB_URL }} >> .env
           cat .env
 

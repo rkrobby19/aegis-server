@@ -4,6 +4,7 @@ const Errors = {
   FailedToSignIn: 'Username or password is incorrect',
   IncompleteInput: 'Please fill in all fields',
   DataNotFound: 'Data not found',
+  NotAllowedByCORS: 'Not allowed by CORS',
 
   EmailEmpty: 'Email cannot be empty',
   EmailNotFound: 'Email not found',
