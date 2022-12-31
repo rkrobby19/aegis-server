@@ -1,28 +1,24 @@
+import constants from '../constants';
+import Errors from '../constants/errors';
+
 class BaseController {
   static getError = (err) => {
     switch (err.message) {
       case err.message:
         return {
-          code: 400,
           message: err.message,
         };
       default:
         return {
-          code: 500,
-          message: 'Internal server error',
+          message: Errors.InternalServerError,
         };
     }
   };
 
-  static reponseSuccess = (data = null, message = null) => {
+  static reponseSuccess = (message = null) => {
     const response = {
-      code: 200,
-      message: 'success',
+      message: constants.Success,
     };
-
-    if (data !== null) {
-      response.data = data;
-    }
 
     if (message !== null) {
       response.message = message;

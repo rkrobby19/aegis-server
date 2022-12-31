@@ -1,5 +1,6 @@
 module.exports = {
-  SetCookie: 'Set-Cookie',
+  Success: 'success',
+  DummyNameWallet: 'cash',
   Token: 'token',
 
   Id: 'id',

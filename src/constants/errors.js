@@ -1,10 +1,11 @@
 const Errors = {
   BadRequest: 'Bad request',
-  Unauthorized: 'Unauthorized',
+  DataNotFound: 'Data not found',
   FailedToSignIn: 'Username or password is incorrect',
   IncompleteInput: 'Please fill in all fields',
-  DataNotFound: 'Data not found',
+  InternalServerError: 'Internal server error',
   NotAllowedByCORS: 'Not allowed by CORS',
+  Unauthorized: 'Unauthorized',
 
   EmailEmpty: 'Email cannot be empty',
   EmailNotFound: 'Email not found',

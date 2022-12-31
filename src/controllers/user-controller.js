@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import constants from '../constants';
 import Errors from '../constants/errors';
 import UserService from '../services/user-service';
@@ -10,11 +9,13 @@ class UserController extends BaseController {
     try {
       const users = await UserService.getUsers();
 
-      return res.send(this.reponseSuccess(users));
+      return res.send({
+        users,
+      });
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -38,15 +39,15 @@ class UserController extends BaseController {
       });
 
       await WalletService.addWallet({
-        name: 'Cash',
+        name: constants.DummyNameWallet,
         userId: user.dataValues.id,
       });
 
-      return res.send(this.reponseSuccess(user));
+      return res.send(this.reponseSuccess());
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -63,38 +64,15 @@ class UserController extends BaseController {
 
       const wallet = await WalletService.getWallets(user.dataValues.id);
 
-      const serialized = cookie.serialize(constants.Token, token, {
-        httpOnly: true,
-        maxAge: 60 * 60 * 24 * 7,
-        path: '/',
-        secure: true,
-        sameSite: 'none',
+      return res.send({
+        message: constants.Success,
+        wallet,
+        token,
       });
-
-      res.setHeader(constants.SetCookie, serialized);
-
-      return res.send(this.reponseSuccess(wallet[0]));
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
-    }
-  };
-
-  static logout = async (req, res) => {
-    try {
-      const setCookie = cookie.serialize(constants.Token, null);
-
-      res.setHeader(constants.SetCookie, setCookie, {
-        httpOnly: true,
-        maxAge: -1,
-      });
-
-      return res.send(this.reponseSuccess());
-    } catch (err) {
-      const error = this.getError(err);
-
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 }

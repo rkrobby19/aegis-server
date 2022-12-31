@@ -19,7 +19,6 @@ router.post(
   [validationRules(Services.Login), validate, Middleware.Guest],
   UserController.login,
 );
-router.post(Routes.Logout, UserController.logout);
 router.get(Routes.Users, [Middleware.Auth], UserController.getUsers);
 
 router.post(
