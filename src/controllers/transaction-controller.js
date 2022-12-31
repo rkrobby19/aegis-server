@@ -9,13 +9,15 @@ class TransactionController extends BaseController {
     try {
       const { id } = req.params;
 
-      const transaction = await TransactionService.getTransactions(id);
+      const transactions = await TransactionService.getTransactions(id);
 
-      return res.send(this.reponseSuccess(transaction));
+      return res.send({
+        transactions,
+      });
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -61,11 +63,11 @@ class TransactionController extends BaseController {
         type,
       });
 
-      return res.send(this.reponseSuccess(transaction));
+      return res.send(this.reponseSuccess());
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -106,7 +108,7 @@ class TransactionController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 }

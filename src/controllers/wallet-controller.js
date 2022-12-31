@@ -9,11 +9,11 @@ class WalletController extends BaseController {
 
       const wallets = await WalletService.getWallets(owner);
 
-      return res.send(this.reponseSuccess(wallets));
+      return res.send({ wallets });
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -27,11 +27,11 @@ class WalletController extends BaseController {
         throw new Error(Errors.WalletNotFound);
       }
 
-      return res.send(this.reponseSuccess(wallet));
+      return res.send(wallet);
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -40,18 +40,18 @@ class WalletController extends BaseController {
       const { name, balance, currency } = req.body;
       const { id: userId } = req.decoded;
 
-      const wallet = await WalletService.addWallet({
+      await WalletService.addWallet({
         name,
         balance,
         currency,
         userId,
       });
 
-      return res.send(this.reponseSuccess(wallet));
+      return res.send(this.reponseSuccess());
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -76,7 +76,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 
@@ -101,7 +101,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.status(error.code).send(error);
+      return res.send(error);
     }
   };
 }
