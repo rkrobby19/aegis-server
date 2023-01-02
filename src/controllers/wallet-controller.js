@@ -13,7 +13,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 
@@ -31,7 +31,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 
@@ -51,7 +51,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 
@@ -76,7 +76,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 
@@ -101,7 +101,7 @@ class WalletController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 }

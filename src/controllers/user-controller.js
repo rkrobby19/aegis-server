@@ -15,7 +15,7 @@ class UserController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 
@@ -47,7 +47,7 @@ class UserController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 
@@ -56,6 +56,10 @@ class UserController extends BaseController {
       const { username, password } = req.body;
 
       const user = await UserService.getUserByUsername({ username });
+
+      if (!user) {
+        throw new Error(Errors.FailedToSignIn);
+      }
 
       const token = await UserService.loginUser({
         user,
@@ -72,7 +76,7 @@ class UserController extends BaseController {
     } catch (err) {
       const error = this.getError(err);
 
-      return res.send(error);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 }
