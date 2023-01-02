@@ -24,7 +24,6 @@ class BaseController {
       case Errors.NotAllowedByCORS:
       case Errors.InvalidTypeTransaction:
         return {
-          code: 400,
           message: err.message,
         };
       case Errors.DataNotFound:
