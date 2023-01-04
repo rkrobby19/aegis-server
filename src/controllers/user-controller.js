@@ -66,11 +66,11 @@ class UserController extends BaseController {
         password,
       });
 
-      const wallet = await WalletService.getWallets(user.dataValues.id);
+      const wallets = await WalletService.getWallets(user.dataValues.id);
 
       return res.send({
         message: constants.Success,
-        wallet,
+        wallet: wallets[0],
         token,
       });
     } catch (err) {

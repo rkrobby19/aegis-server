@@ -58,6 +58,22 @@ class WalletService {
     return balanceUpdate;
   };
 
+  static revertWalletBalance = async ({
+    walletId, toWalletId, amount, type,
+  }) => {
+    let balanceUpdate;
+    if (type === constants.Expense) {
+      balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
+    } else if (type === constants.Income) {
+      balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
+    } else if (type === constants.Transfer) {
+      balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: toWalletId } });
+      balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
+    }
+
+    return balanceUpdate;
+  };
+
   static deleteWallet = async (wallet) => {
     wallet.destroy();
   };
