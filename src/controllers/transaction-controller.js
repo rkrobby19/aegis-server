@@ -79,7 +79,7 @@ class TransactionController extends BaseController {
         type, currency, amount, note, wallet_id: walletId, to_wallet_id: toWalletId,
       } = req.body;
 
-      const transaction = await TransactionService.getTransactionByID(userId, id);
+      const transaction = await TransactionService.getTransactionByID(id);
       if (!transaction) {
         throw new Error(Errors.TransactionNotFound);
       }
@@ -111,5 +111,54 @@ class TransactionController extends BaseController {
       return res.status(error.code).send({ message: error.message });
     }
   };
+
+  static deleteTransaction = async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const transaction = await TransactionService.getTransactionByID(id);
+      if (!transaction) {
+        throw new Error(Errors.TransactionNotFound);
+      }
+
+      const {
+        wallet_id: walletId,
+        to_wallet_id: destinationWalletId,
+        amount,
+        type,
+      } = transaction.dataValues;
+
+      await WalletService.revertWalletBalance({
+        walletId,
+        destinationWalletId,
+        amount,
+        type,
+      });
+
+      await TransactionService.deleteTransaction(transaction);
+
+      return res.send(this.reponseSuccess());
+    } catch (err) {
+      const error = this.getError(err);
+
+      return res.status(error.code).send({ message: error.message });
+    }
+  };
+
+  // static getTotalIncome = async (req, res) => {
+  //   try {
+  //     const { id } = req.params;
+
+  //     const incomeTransactions = await TransactionService.getTransactionsByType('income', id);
+  //     const total = await TransactionService.getTotalAmountOfTransactions(incomeTransactions);
+  //     console.log('====>', total);
+
+  //     return res.send(this.reponseSuccess(total));
+  //   } catch (err) {
+  //     const error = this.getError(err);
+
+  //     return res.status(error.code).send({ message: error.message });
+  //   }
+  // };
 }
 export default TransactionController;

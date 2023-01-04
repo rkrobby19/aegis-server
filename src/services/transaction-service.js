@@ -11,10 +11,9 @@ class TransactionService {
     },
   });
 
-  static getTransactionByID = async (userId, id) => Transaction.findOne({
+  static getTransactionByID = async (id) => Transaction.findOne({
     where: {
-      user_id: userId,
-      [Op.and]: { id },
+      id,
     },
   });
 
@@ -54,6 +53,26 @@ class TransactionService {
       where: { id },
     },
   );
+
+  static getTransactionsByType = async (typeTransaction, id) => Transaction.findAll({
+    where: {
+      type: typeTransaction,
+      [Op.and]: { wallet_id: id },
+    },
+  });
+
+  static getTotalAmountOfTransactions = async (transactions) => {
+    let total = 0;
+    transactions.forEach((element) => {
+      total += element.dataValues.amount;
+    });
+
+    return total;
+  };
+
+  static deleteTransaction = async (transaction) => {
+    transaction.destroy();
+  };
 }
 
 export default TransactionService;

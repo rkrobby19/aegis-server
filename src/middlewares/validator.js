@@ -55,6 +55,10 @@ const validationRules = (service) => {
       ];
     }
 
+    case Services.DeleteTransaction: {
+      return [param(constants.Id, Errors.TransactionNotFound).isUUID()];
+    }
+
     default: {
       return null;
     }

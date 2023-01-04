@@ -54,5 +54,10 @@ router.put(
   [validationRules(Services.UpdateTransaction), validate, Middleware.Auth],
   TransactionController.updateTransaction,
 );
+router.delete(
+  Routes.TransactionId,
+  [validationRules(Services.DeleteTransaction), validate, Middleware.Auth],
+  TransactionController.deleteTransaction,
+);
 
 export default router;
