@@ -136,22 +136,6 @@ class WalletController extends BaseController {
       return res.status(error.code).send({ message: error.message });
     }
   };
-
-  // static getTotalIncome = async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
-
-  //     const incomeTransactions = await TransactionService.getTransactionsByType('income', id);
-  //     const total = await TransactionService.getTotalAmountOfTransactions(incomeTransactions);
-  //     await CashFlowService.updateCashFlow(id);
-
-  //     return res.send(this.reponseSuccess(total));
-  //   } catch (err) {
-  //     const error = this.getError(err);
-
-  //     return res.status(error.code).send({ message: error.message });
-  //   }
-  // };
 }
 
 export default WalletController;

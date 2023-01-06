@@ -62,15 +62,10 @@ class TransactionService {
     },
   });
 
-  static getTransactionByWalletID = async (id) => Transaction.findAll({
-    where: {
-      wallet_id: id,
-    },
-  });
-
   static getTotalTransactionsByType = async (walletID, transactions) => {
     let income = 0;
     let expense = 0;
+
     transactions.forEach((transaction) => {
       const { amount } = transaction.dataValues;
       if (transaction.dataValues.type === constants.Income) {
