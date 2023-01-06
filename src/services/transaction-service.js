@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import constants from '../constants';
 import { Transaction } from '../models';
 
 class TransactionService {
@@ -61,13 +62,31 @@ class TransactionService {
     },
   });
 
-  static getTotalAmountOfTransactions = async (transactions) => {
-    let total = 0;
-    transactions.forEach((element) => {
-      total += element.dataValues.amount;
+  static getTransactionByWalletID = async (id) => Transaction.findAll({
+    where: {
+      wallet_id: id,
+    },
+  });
+
+  static getTotalTransactionsByType = async (walletID, transactions) => {
+    let income = 0;
+    let expense = 0;
+    transactions.forEach((transaction) => {
+      const { amount } = transaction.dataValues;
+      if (transaction.dataValues.type === constants.Income) {
+        income += amount;
+      } else if (transaction.dataValues.type === constants.Expense) {
+        expense += amount;
+      } else if (transaction.dataValues.type === constants.Transfer) {
+        if (transaction.dataValues.wallet_id === walletID) {
+          expense += amount;
+        } else if (transaction.dataValues.to_wallet_id === walletID) {
+          income += amount;
+        }
+      }
     });
 
-    return total;
+    return { income, expense };
   };
 
   static deleteTransaction = async (transaction) => {

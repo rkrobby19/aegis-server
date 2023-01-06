@@ -1,12 +1,13 @@
 import { Op } from 'sequelize';
 import constants from '../constants';
-import { Wallet } from '../models';
+import { Wallet, CashFlow } from '../models';
 
 class WalletService {
   static getWallets = async (id) => Wallet.findAll({
     where: {
       user_id: id,
     },
+    attributes: { exclude: ['cash_flow_id', 'user_id'] },
   });
 
   static getWalletByID = async (userId, id) => Wallet.findOne({
@@ -14,6 +15,14 @@ class WalletService {
       user_id: userId,
       [Op.and]: { id },
     },
+    attributes: { exclude: ['user_id'] },
+    include: [
+      {
+        model: CashFlow,
+        as: 'total',
+        attributes: ['income', 'expense'],
+      },
+    ],
   });
 
   static getOtherWalletByCurrency = async (
@@ -34,12 +43,14 @@ class WalletService {
     name,
     balance,
     currency,
-    userId,
+    userID,
+    cashFlowID,
   }) => Wallet.create({
     name,
     balance,
     currency,
-    user_id: userId,
+    user_id: userID,
+    cash_flow_id: cashFlowID,
   });
 
   static updateWalletBalance = async ({
@@ -80,11 +91,13 @@ class WalletService {
 
   static updateWallet = async (id, {
     name,
+    status,
     balance,
     currency,
   }) => Wallet.update(
     {
       name,
+      status,
       balance,
       currency,
     },
