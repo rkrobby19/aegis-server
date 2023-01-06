@@ -3,6 +3,7 @@ const Routes = {
   Register: '/register',
   Logout: '/logout',
   Users: '/users',
+  Home: '/home/:id',
 
   Wallet: '/wallet',
   WalletId: '/wallet/:id',

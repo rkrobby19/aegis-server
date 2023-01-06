@@ -20,6 +20,7 @@ router.post(
   UserController.login,
 );
 router.get(Routes.Users, [Middleware.Auth], UserController.getUsers);
+router.get(Routes.Home, [Middleware.Auth], UserController.home);
 
 router.post(
   Routes.Wallet,
