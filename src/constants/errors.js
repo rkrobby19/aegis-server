@@ -16,6 +16,7 @@ const Errors = {
   UsernameAlreadyExist: 'Username already exist',
   UserNotFound: 'User not found',
   UsernameEmpty: 'Username cannot be empty',
+  FailedToRegister: 'Failed to register user',
 
   InvalidCurrency: 'Currency must be IDR',
   InvalidId: 'Invalid ID',
@@ -27,10 +28,13 @@ const Errors = {
   DestinationWalletEmpty: 'Destination transfer cannot be empty',
   DestinationWalletNotFound: 'Destination transfer not found',
   UnableToDeleteWallet: 'Unable to delete a wallet',
+  FailedToCreateWallet: 'Failed to create a wallet',
 
   InvalidTypeTransaction: 'Transaction must be either both expense, income, and transfer',
   FailedToCreateTransaction: 'Failed to create a transaction',
   TransactionNotFound: 'Transaction not found',
+
+  FailedToCreateCashFlow: 'Failed to create a cash flow',
 };
 
 export default Errors;
