@@ -6,7 +6,6 @@ class BaseController {
     switch (err.message) {
       case Errors.FailedToSignIn:
       case Errors.EmailEmpty:
-      case Errors.UserAlreadyExist:
       case Errors.IncompleteInput:
       case Errors.LengthPassword:
       case Errors.InvalidEmail:
@@ -20,27 +19,25 @@ class BaseController {
       case Errors.BalanceEmpty:
       case Errors.DestinationWalletEmpty:
       case Errors.FailedToCreateTransaction:
+      case Errors.FailedToRegister:
+      case Errors.FailedToCreateCashFlow:
+      case Errors.FailedToCreateWallet:
+      case Errors.UserAlreadyExist:
       case Errors.UnableToDeleteWallet:
       case Errors.NotAllowedByCORS:
       case Errors.InvalidTypeTransaction:
-        return {
-          message: err.message,
-        };
+        return this.reponseFail(err.message, 400);
+
       case Errors.DataNotFound:
       case Errors.EmailNotFound:
       case Errors.DestinationWalletNotFound:
       case Errors.TransactionNotFound:
       case Errors.UserNotFound:
       case Errors.WalletNotFound:
-        return {
-          code: 404,
-          message: err.message,
-        };
+        return this.reponseFail(err.message, 404);
+
       default:
-        return {
-          code: 500,
-          message: Errors.InternalServerError,
-        };
+        return this.reponseFail(Errors.InternalServerError);
     }
   };
 
@@ -51,6 +48,23 @@ class BaseController {
 
     if (message !== null) {
       response.message = message;
+    }
+
+    return response;
+  };
+
+  static reponseFail = (message, code) => {
+    const response = {
+      message: '',
+      code: 500,
+    };
+
+    if (message !== null) {
+      response.message = message;
+    }
+
+    if (code !== null) {
+      response.code = code;
     }
 
     return response;
