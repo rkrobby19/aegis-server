@@ -28,6 +28,7 @@ router.post(
 );
 router.get(Routes.Wallets, [Middleware.Auth], WalletController.getWallets);
 router.get(Routes.WalletId, [Middleware.Auth], WalletController.getWalletByID);
+router.get(Routes.WalletsToTransfer, [Middleware.Auth], WalletController.getWalletsToTransfer);
 router.delete(
   Routes.WalletId,
   [validationRules(Services.DeleteWallet), validate, Middleware.Auth],
