@@ -16,18 +16,19 @@ class WalletService {
     },
   });
 
-  static getOtherWalletByCurrency = async (
-    userId,
-    currency,
-    walletId,
+  static getOtherWalletsToTransfer = async (
+    userID,
+    // currency,
+    walletID,
   ) => Wallet.findAll({
     where: {
-      user_id: userId,
-      [Op.and]: { currency },
+      user_id: userID,
+      // [Op.and]: { currency },
       id: {
-        [Op.not]: walletId,
+        [Op.not]: walletID,
       },
     },
+    attributes: { exclude: ['user_id', 'balance', 'currency', 'created_at'] },
   });
 
   static addWallet = async ({
