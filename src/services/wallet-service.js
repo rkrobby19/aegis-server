@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import constants from '../constants';
+import constants, { Expense, Payment } from '../constants';
 import { Wallet } from '../models';
 
 class WalletService {
@@ -44,8 +44,15 @@ class WalletService {
   });
 
   static updateWalletBalance = async ({
-    walletId, toWalletId, amount, type,
+    walletId, toWalletId, amount, slug,
   }) => {
+    let type;
+    if (slug === Payment) {
+      type = Expense;
+    } else {
+      type = slug;
+    }
+
     let balanceUpdate;
     if (type === constants.Expense) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });

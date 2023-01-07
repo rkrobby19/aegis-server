@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Income, Expense, Transfer } from '../constants';
+import { Expense, Payment } from '../constants';
 import { Transaction } from '../models';
 
 class TransactionService {
@@ -27,14 +27,10 @@ class TransactionService {
     amount,
   }) => {
     let type;
-    if (slug === Income) {
-      type = Income;
-    } else if (slug === Expense) {
+    if (slug === Payment) {
       type = Expense;
-    } else if (slug === Transfer) {
-      type = Transfer;
     } else {
-      type = Expense;
+      type = slug;
     }
 
     const transaction = Transaction.create({
