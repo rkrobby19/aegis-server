@@ -25,7 +25,7 @@ class TransactionController extends BaseController {
     try {
       const userId = req.decoded.id;
       const {
-        type, currency, amount, note, wallet_id: walletId, to_wallet_id: toWalletId,
+        slug, currency, amount, note, wallet_id: walletId, to_wallet_id: toWalletId,
       } = req.body;
 
       const wallet = await WalletService.getWalletByID(userId, walletId);
@@ -33,7 +33,7 @@ class TransactionController extends BaseController {
         throw new Error(Errors.WalletNotFound);
       }
 
-      if (type === constants.Transfer) {
+      if (slug === constants.Transfer) {
         if (!toWalletId) {
           throw new Error(Errors.DestinationWalletEmpty);
         }
@@ -45,7 +45,7 @@ class TransactionController extends BaseController {
       }
 
       const transaction = await TransactionService.addTransaction({
-        type,
+        slug,
         note,
         currency,
         amount,
@@ -60,7 +60,7 @@ class TransactionController extends BaseController {
         walletId,
         toWalletId,
         amount,
-        type,
+        slug,
       });
 
       return res.send(this.reponseSuccess());

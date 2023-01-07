@@ -30,7 +30,7 @@ const Errors = {
   UnableToDeleteWallet: 'Unable to delete a wallet',
   FailedToCreateWallet: 'Failed to create a wallet',
 
-  InvalidTypeTransaction: 'Transaction must be either both expense, income, and transfer',
+  InvalidTypeTransaction: 'Transaction must be either both expense, payment, income, and transfer',
   FailedToCreateTransaction: 'Failed to create a transaction',
   TransactionNotFound: 'Transaction not found',
 
