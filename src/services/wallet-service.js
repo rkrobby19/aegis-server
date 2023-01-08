@@ -1,5 +1,7 @@
 import { Op } from 'sequelize';
-import constants, { Income, Expense, Transfer, Payment } from '../constants';
+import {
+  Income, Expense, Transfer, Payment,
+} from '../constants';
 import { Wallet, CashFlow } from '../models';
 
 class WalletService {
