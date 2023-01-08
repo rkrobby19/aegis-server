@@ -25,7 +25,7 @@ class TransactionController extends BaseController {
     try {
       const userId = req.decoded.id;
       const {
-        slug, currency, amount, note, wallet_id: walletId, to_wallet_id: toWalletId,
+        slug, currency, amount, name, wallet_id: walletId, to_wallet_id: toWalletId,
       } = req.body;
 
       const wallet = await WalletService.getWalletByID(userId, walletId);
@@ -46,7 +46,7 @@ class TransactionController extends BaseController {
 
       const transaction = await TransactionService.addTransaction({
         slug,
-        note,
+        name,
         currency,
         amount,
         walletId,

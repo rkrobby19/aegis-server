@@ -25,7 +25,7 @@ class TransactionService {
     toWalletId,
     slug,
     currency,
-    note,
+    name,
     amount,
   }) => {
     let type;
@@ -38,7 +38,7 @@ class TransactionService {
     const transaction = Transaction.create({
       type,
       slug,
-      note,
+      name,
       amount,
       currency,
       wallet_id: walletId,

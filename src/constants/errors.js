@@ -33,6 +33,7 @@ const Errors = {
   InvalidTypeTransaction: 'Transaction must be either both expense, payment, income, and transfer',
   FailedToCreateTransaction: 'Failed to create a transaction',
   TransactionNotFound: 'Transaction not found',
+  NameTransactionEmpty: 'Name of transaction cannot be empty',
 
   FailedToCreateCashFlow: 'Failed to create a cash flow',
 };
