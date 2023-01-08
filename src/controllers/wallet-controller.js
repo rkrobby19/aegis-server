@@ -136,6 +136,21 @@ class WalletController extends BaseController {
       return res.status(error.code).send({ message: error.message });
     }
   };
+
+  static getWalletsToTransfer = async (req, res) => {
+    try {
+      const owner = req.decoded.id;
+      const { wallet_id: walletID } = req.body;
+
+      const wallets = await WalletService.getOtherWalletsToTransfer(owner, walletID);
+
+      return res.send({ wallets });
+    } catch (err) {
+      const error = this.getError(err);
+
+      return res.status(error.code).send({ message: error.message });
+    }
+  };
 }
 
 export default WalletController;
