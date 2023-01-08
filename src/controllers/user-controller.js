@@ -1,5 +1,6 @@
 import constants from '../constants';
 import Errors from '../constants/errors';
+import CashFlowService from '../services/cash-flow-service';
 import UserService from '../services/user-service';
 import WalletService from '../services/wallet-service';
 import BaseController from './base-controller';
@@ -23,25 +24,36 @@ class UserController extends BaseController {
     try {
       const { username, email, password } = req.body;
 
-      const getUser = await UserService.getUserByUsernameOrEmail({
+      let user = await UserService.getUserByUsernameOrEmail({
         username,
         email,
       });
-
-      if (getUser) {
+      if (user) {
         throw new Error(Errors.UserAlreadyExist);
       }
 
-      const user = await UserService.registerUser({
+      user = await UserService.registerUser({
         username,
         email,
         password,
       });
+      if (!user) {
+        throw new Error(Errors.FailedToRegister);
+      }
 
-      await WalletService.addWallet({
+      const cashFlow = await CashFlowService.addCashFlow();
+      if (!cashFlow) {
+        throw new Error(Errors.FailedToCreateCashFlow);
+      }
+
+      const wallet = await WalletService.addWallet({
         name: constants.DummyNameWallet,
-        userId: user.dataValues.id,
+        userID: user.dataValues.id,
+        cashFlowID: cashFlow.dataValues.id,
       });
+      if (!wallet) {
+        throw new Error(Errors.FailedToCreateWallet);
+      }
 
       return res.send(this.reponseSuccess());
     } catch (err) {
