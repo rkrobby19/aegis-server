@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import constants from '../constants';
+import { Income, Expense, Transfer, Payment } from '../constants';
 import { Transaction } from '../models';
 
 class TransactionService {
@@ -21,18 +21,30 @@ class TransactionService {
   static addTransaction = async ({
     walletId,
     toWalletId,
+    slug,
     currency,
-    type,
     note,
     amount,
-  }) => Transaction.create({
-    type,
-    note,
-    amount,
-    currency,
-    wallet_id: walletId,
-    to_wallet_id: toWalletId,
-  });
+  }) => {
+    let type;
+    if (slug === Payment) {
+      type = Expense;
+    } else {
+      type = slug;
+    }
+
+    const transaction = Transaction.create({
+      type,
+      slug,
+      note,
+      amount,
+      currency,
+      wallet_id: walletId,
+      to_wallet_id: toWalletId,
+    });
+
+    return transaction;
+  };
 
   static updateTransaction = async (id, {
     walletId,
@@ -68,11 +80,11 @@ class TransactionService {
 
     transactions.forEach((transaction) => {
       const { amount } = transaction.dataValues;
-      if (transaction.dataValues.type === constants.Income) {
+      if (transaction.dataValues.type === Income) {
         income += amount;
-      } else if (transaction.dataValues.type === constants.Expense) {
+      } else if (transaction.dataValues.type === Expense) {
         expense += amount;
-      } else if (transaction.dataValues.type === constants.Transfer) {
+      } else if (transaction.dataValues.type === Transfer) {
         if (transaction.dataValues.wallet_id === walletID) {
           expense += amount;
         } else if (transaction.dataValues.to_wallet_id === walletID) {

@@ -12,8 +12,9 @@ module.exports = {
   Currency: 'currency',
   Name: 'name',
 
-  TypeTransaction: 'type',
+  TypeTransaction: 'slug',
   Transfer: 'transfer',
   Income: 'income',
   Expense: 'expense',
+  Payment: 'payment',
 };

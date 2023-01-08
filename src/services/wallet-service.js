@@ -1,5 +1,7 @@
 import { Op } from 'sequelize';
-import constants from '../constants';
+import {
+  Income, Expense, Transfer, Payment,
+} from '../constants';
 import { Wallet, CashFlow } from '../models';
 
 class WalletService {
@@ -25,14 +27,12 @@ class WalletService {
     ],
   });
 
-  static getOtherWalletsToTransfer = async (
+  static getOtherWallets = async (
     userId,
-    // currency,
     walletId,
   ) => Wallet.findAll({
     where: {
       user_id: userId,
-      // [Op.and]: { currency },
       id: {
         [Op.not]: walletId,
       },
@@ -55,14 +55,21 @@ class WalletService {
   });
 
   static updateWalletBalance = async ({
-    walletId, toWalletId, amount, type,
+    walletId, toWalletId, amount, slug,
   }) => {
+    let type;
+    if (slug === Payment) {
+      type = Expense;
+    } else {
+      type = slug;
+    }
+
     let balanceUpdate;
-    if (type === constants.Expense) {
+    if (type === Expense) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Income) {
+    } else if (type === Income) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Transfer) {
+    } else if (type === Transfer) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: toWalletId } });
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
     }
@@ -74,11 +81,11 @@ class WalletService {
     walletId, toWalletId, amount, type,
   }) => {
     let balanceUpdate;
-    if (type === constants.Expense) {
+    if (type === Expense) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Income) {
+    } else if (type === Income) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Transfer) {
+    } else if (type === Transfer) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: toWalletId } });
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
     }

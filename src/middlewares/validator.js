@@ -43,7 +43,7 @@ const validationRules = (service) => {
 
     case Services.AddTransaction: {
       return [
-        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn(['expense', 'income', 'transfer']),
+        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn(['expense', 'income', 'transfer', 'payment']),
         body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
       ];
     }
