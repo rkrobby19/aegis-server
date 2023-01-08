@@ -37,7 +37,9 @@ class WalletController extends BaseController {
       if (cashFlowID == null) {
         const cashFlow = await CashFlowService.addCashFlow();
         cashFlowID = cashFlow.dataValues.id;
+
         await CashFlowService.updateCashFlow(cashFlowID, income, expense);
+        await WalletService.updateCashFlowWallet(id, cashFlowID);
         wallet = await WalletService.getWalletByID(userID, id);
 
         return res.send(wallet);

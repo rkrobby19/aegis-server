@@ -1,5 +1,7 @@
 import { Op } from 'sequelize';
-import { Income, Expense, Transfer, Payment } from '../constants';
+import {
+  Income, Expense, Transfer, Payment,
+} from '../constants';
 import { Transaction } from '../models';
 
 class TransactionService {

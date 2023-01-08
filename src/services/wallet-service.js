@@ -113,6 +113,22 @@ class WalletService {
       where: { id },
     },
   );
+
+  static updateCashFlowWallet = async (
+    id,
+    cashFlowID,
+  ) => {
+    const wallet = Wallet.update(
+      {
+        cash_flow_id: cashFlowID,
+      },
+      {
+        where: { id },
+      },
+    );
+
+    return wallet;
+  };
 }
 
 export default WalletService;

@@ -50,8 +50,9 @@ module.exports = (sequelize, DataTypes) => {
       slug: {
         type: DataTypes.ENUM('expense', 'income', 'transfer', 'payment'),
       },
-      note: {
+      name: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
       amount: {
         allowNull: false,
