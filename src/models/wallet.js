@@ -3,9 +3,10 @@ import { Model } from 'sequelize';
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
     static associate = (models) => {
-      const { User } = models;
+      const { User, CashFlow } = models;
 
       Wallet.belongsTo(User, { as: 'users', foreignKey: 'user_id' });
+      Wallet.belongsTo(CashFlow, { as: 'total', foreignKey: 'cash_flow_id' });
     };
   }
 
@@ -27,9 +28,24 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: 'SET NULL',
       },
+      cash_flow_id: {
+        type: DataTypes.UUID,
+        references: {
+          key: 'id',
+          model: {
+            tableName: 'cash_flows',
+          },
+        },
+        onDelete: 'SET NULL',
+      },
       name: {
         allowNull: false,
         type: DataTypes.STRING,
+      },
+      status: {
+        allowNull: false,
+        type: DataTypes.ENUM('active', 'inactive'),
+        defaultValue: 'active',
       },
       currency: {
         allowNull: false,

@@ -1,12 +1,13 @@
 import { Op } from 'sequelize';
-import constants, { Expense, Payment } from '../constants';
-import { Wallet } from '../models';
+import constants, { Income, Expense, Transfer, Payment } from '../constants';
+import { Wallet, CashFlow } from '../models';
 
 class WalletService {
   static getWallets = async (id) => Wallet.findAll({
     where: {
       user_id: id,
     },
+    attributes: { exclude: ['cash_flow_id', 'user_id'] },
   });
 
   static getWalletByID = async (userId, id) => Wallet.findOne({
@@ -14,16 +15,22 @@ class WalletService {
       user_id: userId,
       [Op.and]: { id },
     },
+    attributes: { exclude: ['user_id'] },
+    include: [
+      {
+        model: CashFlow,
+        as: 'total',
+        attributes: ['income', 'expense'],
+      },
+    ],
   });
 
   static getOtherWallets = async (
     userId,
-    // currency,
     walletId,
   ) => Wallet.findAll({
     where: {
       user_id: userId,
-      // [Op.and]: { currency },
       id: {
         [Op.not]: walletId,
       },
@@ -35,12 +42,14 @@ class WalletService {
     name,
     balance,
     currency,
-    userId,
+    userID,
+    cashFlowID,
   }) => Wallet.create({
     name,
     balance,
     currency,
-    user_id: userId,
+    user_id: userID,
+    cash_flow_id: cashFlowID,
   });
 
   static updateWalletBalance = async ({
@@ -54,11 +63,11 @@ class WalletService {
     }
 
     let balanceUpdate;
-    if (type === constants.Expense) {
+    if (type === Expense) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Income) {
+    } else if (type === Income) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Transfer) {
+    } else if (type === Transfer) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: toWalletId } });
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
     }
@@ -70,11 +79,11 @@ class WalletService {
     walletId, toWalletId, amount, type,
   }) => {
     let balanceUpdate;
-    if (type === constants.Expense) {
+    if (type === Expense) {
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Income) {
+    } else if (type === Income) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
-    } else if (type === constants.Transfer) {
+    } else if (type === Transfer) {
       balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: toWalletId } });
       balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
     }
@@ -88,11 +97,13 @@ class WalletService {
 
   static updateWallet = async (id, {
     name,
+    status,
     balance,
     currency,
   }) => Wallet.update(
     {
       name,
+      status,
       balance,
       currency,
     },
