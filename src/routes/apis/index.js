@@ -31,12 +31,12 @@ router.get(Routes.Wallets, [Middleware.Auth], WalletController.getWallets);
 router.get(Routes.WalletDetail, [Middleware.Auth], WalletController.getWalletByID);
 router.get(Routes.WalletsToTransfer, [Middleware.Auth], WalletController.getWalletsToTransfer);
 router.delete(
-  Routes.WalletId,
+  Routes.WalletID,
   [validationRules(Services.DeleteWallet), validate, Middleware.Auth],
   WalletController.deleteWallet,
 );
 router.put(
-  Routes.WalletId,
+  Routes.WalletID,
   [validationRules(Services.UpdateWallet), validate, Middleware.Auth],
   WalletController.updateWallet,
 );
