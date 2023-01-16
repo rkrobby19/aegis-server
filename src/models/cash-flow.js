@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate = (models) => {
       const { Wallet } = models;
 
-      CashFlow.hasOne(Wallet, { foreignKey: 'cash_flow_id' });
+      CashFlow.hasOne(Wallet, { foreignKey: 'cash_flow_id', onDelete: 'SET NULL' });
     };
   }
 

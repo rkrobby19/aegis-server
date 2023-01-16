@@ -1,14 +1,16 @@
 import { Income, Transfer } from '../constants';
 import rupiah from './formatRupiah';
 
-function createNotificationMessage(slug, amount, walletID, toWalletID, name) {
+function createNotificationMessage(slug, amount, sourceWallet, destinationWallet, name) {
   const formatRupiah = rupiah(amount);
+  const sourceWalletName = sourceWallet.dataValues.name;
 
   let message;
   if (slug === Income) {
     message = `You have received ${formatRupiah} from ${name}`;
   } else if (slug === Transfer) {
-    message = `You have transfered ${formatRupiah} from ${walletID} to ${toWalletID} for ${name}`;
+    const destinationWalletName = destinationWallet.dataValues.name;
+    message = `You have transfered ${formatRupiah} from ${sourceWalletName} to ${destinationWalletName} for ${name}`;
   } else {
     message = `You have spent ${formatRupiah} for ${name}`;
   }

@@ -3,11 +3,10 @@ import { Model } from 'sequelize';
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate = (models) => {
-      const { Wallet } = models;
+      const { Wallet, Log } = models;
 
-      User.hasMany(Wallet, {
-        foreignKey: 'user_id',
-      });
+      User.hasMany(Wallet, { foreignKey: 'user_id' });
+      User.hasMany(Log, { foreignKey: 'user_id' });
     };
   }
 
