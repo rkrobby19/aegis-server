@@ -23,20 +23,13 @@ class UserService {
     return user;
   };
 
-  static registerUser = async ({
-    username,
-    email,
-    password,
-  }) => User.create({
+  static registerUser = async ({ username, email, password }) => User.create({
     username,
     email,
     password: hashSync(password, 10),
   });
 
-  static loginUser = async ({
-    user,
-    password,
-  }) => {
+  static loginUser = async ({ user, password }) => {
     if (!user || !compareSync(password, user.password)) {
       throw new Error(errors.FailedToSignIn);
     }

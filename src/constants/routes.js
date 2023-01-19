@@ -3,6 +3,7 @@ const Routes = {
   Register: '/register',
   Logout: '/logout',
   Users: '/users',
+  Token: '/refresh-token',
 
   Wallet: '/wallet',
   WalletID: '/wallet/:id',

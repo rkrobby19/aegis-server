@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+import jwt_decode from 'jwt-decode';
 import constants from '../constants';
 import Errors from '../constants/errors';
 import CashFlowService from '../services/cash-flow-service';
@@ -73,22 +75,79 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToSignIn);
       }
 
-      const token = await UserService.loginUser({
+      const access_token = await UserService.loginUser({
         user,
         password,
       });
 
+      const payload = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
+
+      const refresh_token = jwt.sign(payload, process.env.SECRET, {
+        expiresIn: '1d',
+        algorithm: 'HS256',
+      });
+
       const wallets = await WalletService.getWallets(user.dataValues.id);
 
-      return res.send({
-        message: constants.Success,
-        wallet: wallets[0],
-        token,
-      });
+      return res
+        .cookie('refresh', refresh_token, {
+          maxAges: 1000 * 60 * 60 * 24,
+          httpOnly: true,
+        })
+        .send({
+          message: constants.Success,
+          wallet: wallets[0],
+          access_token,
+        });
     } catch (err) {
       const error = this.getError(err);
 
       return res.status(error.code).send({ message: error.message });
+    }
+  };
+
+  static refreshToken = async (req, res) => {
+    try {
+      const token = req.cookies.refresh;
+      const decode = jwt_decode(token);
+      const { username } = decode;
+
+      // * Find user data
+      const user = await UserService.getUserByUsername({ username });
+
+      // ! Comparing token_version
+
+      // * Generate new token
+      const payload = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
+
+      const access_token = jwt.sign(payload, process.env.SECRET, {
+        expiresIn: '1h',
+        algorithm: 'HS256',
+      });
+
+      const refresh_token = jwt.sign(payload, process.env.SECRET, {
+        expiresIn: '1d',
+        algorithm: 'HS256',
+      });
+
+      return res
+        .cookie('refresh', refresh_token, {
+          maxAges: 1000 * 60 * 60 * 24,
+          httpOnly: true,
+        })
+        .send({
+          access_token,
+        });
+    } catch (error) {
+      return res.send(error.message);
     }
   };
 }
