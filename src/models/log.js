@@ -1,16 +1,15 @@
 import { Model } from 'sequelize';
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Log extends Model {
     static associate = (models) => {
-      const { Wallet, Log } = models;
+      const { User } = models;
 
-      User.hasMany(Wallet, { foreignKey: 'user_id' });
-      User.hasMany(Log, { foreignKey: 'user_id' });
+      Log.belongsTo(User, { as: 'users', foreignKey: 'user_id' });
     };
   }
 
-  User.init(
+  Log.init(
     {
       id: {
         unique: true,
@@ -18,19 +17,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      username: {
-        unique: true,
+      user_id: {
+        type: DataTypes.UUID,
+        references: {
+          key: 'id',
+          model: {
+            tableName: 'users',
+          },
+        },
+        onDelete: 'SET NULL',
+      },
+      slug: {
+        allowNull: false,
+        type: DataTypes.ENUM('expense', 'income', 'transfer', 'payment'),
+      },
+      message: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      password: {
+      type: {
         allowNull: false,
-        type: DataTypes.STRING,
-      },
-      email: {
-        unique: true,
-        allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('expense', 'income', 'transfer'),
       },
       created_at: {
         allowNull: false,
@@ -42,9 +49,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       timestamps: false,
       underscored: true,
-      tableName: 'users',
+      tableName: 'logs',
     },
   );
 
-  return User;
+  return Log;
 };
