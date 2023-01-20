@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
             tableName: 'wallets',
           },
         },
-        onDelete: 'SET NULL',
       },
       to_wallet_id: {
         type: DataTypes.UUID,
@@ -40,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
             tableName: 'wallets',
           },
         },
-        onDelete: 'SET NULL',
       },
       currency: {
         allowNull: false,
