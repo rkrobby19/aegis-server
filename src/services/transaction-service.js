@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { Op } from 'sequelize';
 import {
   Income, Expense, Transfer, Payment,
@@ -5,14 +6,44 @@ import {
 import { Transaction } from '../models';
 
 class TransactionService {
-  static getTransactions = async (id) => Transaction.findAll({
-    where: {
-      [Op.or]: [
-        { to_wallet_id: id },
-        { wallet_id: id },
-      ],
-    },
-  });
+  static getTransactions = async (id, {
+    limit,
+    page,
+  }) => {
+    const where = {};
+    let offset = 0;
+
+    if (!limit) {
+      limit = 15;
+    }
+
+    if (id) {
+      Object.assign(where, {
+        [Op.or]: [
+          { to_wallet_id: id },
+          { wallet_id: id },
+        ],
+      });
+    }
+
+    if (page) {
+      offset = (page - 1) * limit;
+    }
+
+    const { count, rows } = await Transaction.findAndCountAll({
+      where,
+      limit,
+      offset,
+    });
+
+    rows.forEach((transaction) => {
+      if (transaction.dataValues.slug !== Income) {
+        transaction.dataValues.amount *= -1;
+      }
+    });
+
+    return { rows, count };
+  };
 
   static getTransactionByID = async (id) => Transaction.findOne({
     where: {

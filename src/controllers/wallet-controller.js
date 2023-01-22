@@ -90,6 +90,7 @@ class WalletController extends BaseController {
     try {
       const userID = req.decoded.id;
       const { id } = req.params;
+      const { query } = req;
 
       const wallet = await WalletService.getWalletByID(userID, id);
       if (!wallet) {
@@ -98,13 +99,22 @@ class WalletController extends BaseController {
 
       const wallets = await WalletService.getOtherWallets(userID, id);
 
-      const transactions = await TransactionService.getTransactions(id);
+      const { rows: transactions, count: total_of_transaction } = await
+      TransactionService.getTransactions(id, query);
       const {
         id: wallet_id, name, currency, balance,
       } = wallet.dataValues;
 
       return res.send({
-        wallet_id, name, currency, balance, wallets, transactions,
+        wallet_id,
+        name,
+        currency,
+        balance,
+        wallets,
+        transactions,
+        total_of_transaction,
+        size: query.limit,
+        page: query.page,
       });
     } catch (err) {
       const error = this.getError(err);
