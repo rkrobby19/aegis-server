@@ -9,6 +9,8 @@ class TransactionService {
   static getTransactions = async (id, {
     limit,
     page,
+    start_date: startDate,
+    end_date: endDate,
   }) => {
     const where = {};
     let offset = 0;
@@ -23,6 +25,9 @@ class TransactionService {
           { to_wallet_id: id },
           { wallet_id: id },
         ],
+        created_at: {
+          [Op.between]: [startDate, endDate],
+        },
       });
     }
 
