@@ -181,7 +181,7 @@ class WalletController extends BaseController {
       const owner = req.decoded.id;
       const { wallet_id: walletID } = req.body;
 
-      const wallets = await WalletService.getOtherWalletsToTransfer(owner, walletID);
+      const wallets = await WalletService.getOtherWallets(owner, walletID);
 
       return res.send({ wallets });
     } catch (err) {

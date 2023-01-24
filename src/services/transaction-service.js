@@ -4,6 +4,7 @@ import {
   Income, Expense, Transfer, Payment, DummyDate,
 } from '../constants';
 import { Transaction } from '../models';
+import slugToType from '../utils/slugToType';
 
 class TransactionService {
   static getTransactions = async (id, {
@@ -65,19 +66,14 @@ class TransactionService {
   });
 
   static addTransaction = async ({
-    walletId,
-    toWalletId,
+    walletID,
+    toWalletID,
     slug,
     currency,
     name,
     amount,
   }) => {
-    let type;
-    if (slug === Payment) {
-      type = Expense;
-    } else {
-      type = slug;
-    }
+    const type = slugToType(slug);
 
     const transaction = Transaction.create({
       type,
@@ -85,8 +81,8 @@ class TransactionService {
       name,
       amount,
       currency,
-      wallet_id: walletId,
-      to_wallet_id: toWalletId,
+      wallet_id: walletID,
+      to_wallet_id: toWalletID,
     });
 
     return transaction;

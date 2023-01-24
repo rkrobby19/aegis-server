@@ -15,6 +15,8 @@ const Routes = {
 
   Transfer: '/transfer',
   TransferId: '/transfer/:id',
+
+  Logs: '/logs',
 };
 
 export default Routes;

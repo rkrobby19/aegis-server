@@ -5,7 +5,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate = (models) => {
       const { Wallet } = models;
 
-      Transaction.belongsTo(Wallet, { as: 'wallets', foreignKey: 'wallet_id' });
+      Transaction.belongsTo(Wallet, {
+        as: 'wallets',
+        foreignKey: 'wallet_id',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      });
     };
   }
 

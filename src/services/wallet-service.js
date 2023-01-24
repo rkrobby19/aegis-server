@@ -1,8 +1,7 @@
 import { Op } from 'sequelize';
-import {
-  Income, Expense, Transfer, Payment,
-} from '../constants';
+import { Income, Expense, Transfer } from '../constants';
 import { Wallet, CashFlow } from '../models';
+import slugToType from '../utils/slugToType';
 
 class WalletService {
   static getWallets = async (id) => Wallet.findAll({
@@ -55,23 +54,18 @@ class WalletService {
   });
 
   static updateWalletBalance = async ({
-    walletId, toWalletId, amount, slug,
+    walletID, toWalletID, amount, slug,
   }) => {
-    let type;
-    if (slug === Payment) {
-      type = Expense;
-    } else {
-      type = slug;
-    }
+    const type = slugToType(slug);
 
     let balanceUpdate;
     if (type === Expense) {
-      balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
+      balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletID } });
     } else if (type === Income) {
-      balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletId } });
+      balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: walletID } });
     } else if (type === Transfer) {
-      balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: toWalletId } });
-      balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletId } });
+      balanceUpdate = await Wallet.increment({ balance: amount }, { where: { id: toWalletID } });
+      balanceUpdate = await Wallet.decrement({ balance: amount }, { where: { id: walletID } });
     }
 
     return balanceUpdate;

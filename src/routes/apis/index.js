@@ -5,6 +5,7 @@ import Services from '../../constants/services';
 import Middleware from '../../middlewares';
 import WalletController from '../../controllers/wallet-controller';
 import TransactionController from '../../controllers/transaction-controller';
+import LogController from '../../controllers/log-controller';
 
 const router = express.Router();
 const { validate, validationRules } = require('../../middlewares/validator');
@@ -60,6 +61,12 @@ router.delete(
   Routes.TransactionId,
   [validationRules(Services.DeleteTransaction), validate, Middleware.Auth],
   TransactionController.deleteTransaction,
+);
+
+router.get(
+  Routes.Logs,
+  [Middleware.Auth],
+  LogController.getLogs,
 );
 
 export default router;
