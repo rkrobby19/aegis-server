@@ -8,8 +8,9 @@ class TransactionController extends BaseController {
   static getTransactionsByWalletID = async (req, res) => {
     try {
       const { id } = req.params;
+      const { query } = req;
 
-      const transactions = await TransactionService.getTransactions(id);
+      const transactions = await TransactionService.getTransactions(id, query);
 
       return res.send({
         transactions,

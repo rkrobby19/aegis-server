@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Op } from 'sequelize';
 import {
-  Income, Expense, Transfer, Payment,
+  Income, Expense, Transfer, Payment, DummyDate,
 } from '../constants';
 import { Transaction } from '../models';
 
@@ -17,6 +17,14 @@ class TransactionService {
 
     if (!limit) {
       limit = 15;
+    }
+
+    if (!startDate) {
+      startDate = DummyDate;
+    }
+
+    if (!endDate) {
+      endDate = new Date();
     }
 
     if (id) {
