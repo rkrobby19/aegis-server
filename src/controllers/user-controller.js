@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-import jwt_decode from 'jwt-decode';
 import constants from '../constants';
 import Errors from '../constants/errors';
 import CashFlowService from '../services/cash-flow-service';
@@ -86,27 +84,38 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToSignIn);
       }
 
+      // ! Refresh token check
+
+      let { refresh_token } = user.dataValues;
+
+      const verify = Jwt.verifyRefreshToken(refresh_token);
+
+      // * Token doesnt exist & token exp or error
+
+      if (!refresh_token || verify.status === 'error') {
+        const payload = {
+          username: user.dataValues.username,
+          email: user.dataValues.email,
+          token_version: user.dataValues.token_version,
+        };
+
+        const newToken = Jwt.signRefreshToken(payload);
+
+        await UserService.updateToken(username, newToken);
+
+        refresh_token = newToken;
+      }
+
       const access_token = await UserService.loginUser({
         user,
         password,
       });
 
-      const payload = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-      };
-
-      const refresh_token = jwt.sign(payload, process.env.SECRET, {
-        expiresIn: '1d',
-        algorithm: 'HS256',
-      });
-
       const wallets = await WalletService.getWallets(user.dataValues.id);
 
       return res
-        .cookie('refresh', refresh_token, {
-          maxAges: 1000 * 60 * 60 * 24,
+        .cookie('refresh_token', refresh_token, {
+          maxAges: 1000 * 60 * 60 * 24 * 7,
           httpOnly: true,
         })
         .send({
@@ -123,8 +132,8 @@ class UserController extends BaseController {
 
   static refreshToken = async (req, res) => {
     try {
-      const token = req.cookies.refresh;
-      const decode = jwt_decode(token);
+      const token = req.cookies.refresh_token;
+      const decode = Jwt.decodeToken(token);
       const { username } = decode;
 
       // * Find user data
@@ -132,33 +141,20 @@ class UserController extends BaseController {
 
       // ! Comparing token_version
 
-      // * Generate new token
+      // * Generate new access token
       const payload = {
         id: user.id,
         username: user.username,
         email: user.email,
       };
 
-      const access_token = jwt.sign(payload, process.env.SECRET, {
-        expiresIn: '1h',
-        algorithm: 'HS256',
-      });
+      const access_token = Jwt.sign(payload);
 
-      const refresh_token = jwt.sign(payload, process.env.SECRET, {
-        expiresIn: '1d',
-        algorithm: 'HS256',
+      return res.send({
+        access_token,
       });
-
-      return res
-        .cookie('refresh', refresh_token, {
-          maxAges: 1000 * 60 * 60 * 24,
-          httpOnly: true,
-        })
-        .send({
-          access_token,
-        });
     } catch (error) {
-      return res.send(error.message);
+      return res.status(error.code).send({ message: error.message });
     }
   };
 }

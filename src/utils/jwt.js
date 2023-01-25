@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable implicit-arrow-linebreak */
 import jwt from 'jsonwebtoken';
 
@@ -20,6 +21,18 @@ class Jwt {
 
   static verify = (token) =>
     jwt.verify(token, process.env.SECRET, this.OPTIONS);
+
+  static verifyRefreshToken = (token) =>
+    jwt.verify(token, process.env.REFRESH_SECRET, (err, decoded) => {
+      if (err) {
+        return { status: 'error', message: err.message };
+      }
+      {
+        return { status: 'success', data: decoded };
+      }
+    });
+
+  static decodeToken = (token) => jwt.decode(token);
 }
 
 export default Jwt;

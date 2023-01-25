@@ -19,7 +19,7 @@ router.post(
   [validationRules(Services.Login), validate, Middleware.Guest],
   UserController.login,
 );
-router.get(Routes.Token, UserController.refreshToken);
+router.post(Routes.Token, UserController.refreshToken);
 router.get(Routes.Users, [Middleware.Auth], UserController.getUsers);
 
 router.post(

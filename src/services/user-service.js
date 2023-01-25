@@ -47,6 +47,17 @@ class UserService {
 
     return token;
   };
+
+  static updateToken = async (username, refresh_token) => {
+    await User.update(
+      { refresh_token },
+      {
+        where: {
+          username,
+        },
+      },
+    );
+  };
 }
 
 export default UserService;
