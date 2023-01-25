@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 import jwt from 'jsonwebtoken';
 
 class Jwt {
@@ -6,9 +7,19 @@ class Jwt {
     algorithm: 'HS256',
   };
 
-  static sign = (payload) => jwt.sign(payload, process.env.SECRET, this.OPTIONS);
+  static REFRESH_OPTIONS = {
+    expiresIn: 60,
+    algorithm: 'HS256',
+  };
 
-  static verify = (token) => jwt.verify(token, process.env.SECRET, this.OPTIONS);
+  static sign = (payload) =>
+    jwt.sign(payload, process.env.SECRET, this.OPTIONS);
+
+  static signRefreshToken = (payload) =>
+    jwt.sign(payload, process.env.REFRESH_SECRET, this.REFRESH_OPTIONS);
+
+  static verify = (token) =>
+    jwt.verify(token, process.env.SECRET, this.OPTIONS);
 }
 
 export default Jwt;

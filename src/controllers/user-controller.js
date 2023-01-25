@@ -5,6 +5,7 @@ import Errors from '../constants/errors';
 import CashFlowService from '../services/cash-flow-service';
 import UserService from '../services/user-service';
 import WalletService from '../services/wallet-service';
+import Jwt from '../utils/jwt';
 import BaseController from './base-controller';
 
 class UserController extends BaseController {
@@ -34,11 +35,21 @@ class UserController extends BaseController {
         throw new Error(Errors.UserAlreadyExist);
       }
 
+      const payload = {
+        username,
+        email,
+        token_version: 0,
+      };
+
+      const refresh_token = Jwt.signRefreshToken(payload);
+
       user = await UserService.registerUser({
         username,
         email,
         password,
+        refresh_token,
       });
+
       if (!user) {
         throw new Error(Errors.FailedToRegister);
       }

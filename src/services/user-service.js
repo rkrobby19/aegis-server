@@ -23,10 +23,13 @@ class UserService {
     return user;
   };
 
-  static registerUser = async ({ username, email, password }) => User.create({
+  static registerUser = async ({
+    username, email, password, refresh_token,
+  }) => User.create({
     username,
     email,
     password: hashSync(password, 10),
+    refresh_token,
   });
 
   static loginUser = async ({ user, password }) => {
