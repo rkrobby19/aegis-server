@@ -7,7 +7,11 @@ import WalletController from '../../controllers/wallet-controller';
 import TransactionController from '../../controllers/transaction-controller';
 
 const router = express.Router();
-const { validate, validationRules } = require('../../middlewares/validator');
+const {
+  validate,
+  validationRules,
+  validateRefreshToken,
+} = require('../../middlewares/validator');
 
 router.post(
   Routes.Register,
@@ -19,7 +23,7 @@ router.post(
   [validationRules(Services.Login), validate, Middleware.Guest],
   UserController.login,
 );
-router.post(Routes.Token, UserController.refreshToken);
+router.post(Routes.Token, validateRefreshToken, UserController.refreshToken);
 router.get(Routes.Users, [Middleware.Auth], UserController.getUsers);
 
 router.post(

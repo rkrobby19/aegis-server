@@ -2,6 +2,7 @@ import { body, param, validationResult } from 'express-validator';
 import Services from '../constants/services';
 import Errors from '../constants/errors';
 import constants from '../constants';
+import Jwt from '../utils/jwt';
 
 const validationRules = (service) => {
   switch (service) {
@@ -43,7 +44,12 @@ const validationRules = (service) => {
 
     case Services.AddTransaction: {
       return [
-        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn(['expense', 'income', 'transfer', 'payment']),
+        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn([
+          'expense',
+          'income',
+          'transfer',
+          'payment',
+        ]),
         body(constants.Name, Errors.NameTransactionEmpty).notEmpty(),
         body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
       ];
@@ -51,7 +57,12 @@ const validationRules = (service) => {
 
     case Services.UpdateTransaction: {
       return [
-        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn(['expense', 'income', 'transfer', 'payment']),
+        body(constants.TypeTransaction, Errors.InvalidTypeTransaction).isIn([
+          'expense',
+          'income',
+          'transfer',
+          'payment',
+        ]),
         body(constants.Name, Errors.NameTransactionEmpty).notEmpty(),
         body(constants.Currency, Errors.InvalidCurrency).isIn(['IDR']),
       ];
@@ -75,12 +86,34 @@ const validate = (req, res, next) => {
   const extractedErrors = [];
   errors.array().map((err) => extractedErrors.push({ message: err.msg }));
 
-  return res.status(400).send(
-    extractedErrors[0],
-  );
+  return res.status(400).send(extractedErrors[0]);
+};
+
+const validateRefreshToken = async (req, res, next) => {
+  const { refresh_token } = req.cookies;
+
+  if (!refresh_token) {
+    return res.status(403).send({
+      status: 'error',
+      message: 'No token provided',
+    });
+  }
+
+  const verify = await Jwt.verifyRefreshToken(refresh_token);
+
+  if (verify.status === 'error') {
+    return res
+      .status(401)
+      .send({ status: verify.status, message: verify.message });
+  }
+
+  const decoded = verify.data;
+  req.decoded = decoded;
+  return next();
 };
 
 module.exports = {
   validationRules,
   validate,
+  validateRefreshToken,
 };
