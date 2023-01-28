@@ -9,7 +9,7 @@ class Jwt {
   };
 
   static REFRESH_OPTIONS = {
-    expiresIn: 60,
+    expiresIn: '1d',
     algorithm: 'HS256',
   };
 

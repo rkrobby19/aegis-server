@@ -84,15 +84,15 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToSignIn);
       }
 
-      // ! Refresh token check
-
       let { refresh_token } = user.dataValues;
 
       const verify = Jwt.verifyRefreshToken(refresh_token);
 
-      // * Token doesnt exist & token exp or error
-
-      if (!refresh_token || verify.status === 'error') {
+      if (
+        !refresh_token
+        || verify.status === 'error'
+        || verify.data.token_version !== user.dataValues.token_version
+      ) {
         const payload = {
           username: user.dataValues.username,
           email: user.dataValues.email,
@@ -115,7 +115,7 @@ class UserController extends BaseController {
 
       return res
         .cookie('refresh_token', refresh_token, {
-          maxAges: 1000 * 60 * 60 * 24 * 7,
+          maxAges: 1000 * 60 * 60 * 24,
           httpOnly: true,
         })
         .send({
@@ -134,17 +134,14 @@ class UserController extends BaseController {
     try {
       const { username, token_version } = req.decoded;
 
-      // * Find user data
       const user = await UserService.getUserByUsername({ username });
 
-      // ! Comparing token_version
       if (token_version !== user.token_version) {
         return res
           .status(401)
           .send({ status: 'error', message: 'Token version not valid' });
       }
 
-      // * Generate new access token
       const payload = {
         id: user.id,
         username: user.username,
@@ -165,7 +162,6 @@ class UserController extends BaseController {
     try {
       const { username, token_version } = req.decoded;
 
-      // * Update token version
       const newVersion = token_version + 1;
 
       await UserService.updateTokenVersion(username, newVersion);
