@@ -160,6 +160,30 @@ class UserController extends BaseController {
       return res.status(error.code).send({ message: error.message });
     }
   };
+
+  static logout = async (req, res) => {
+    try {
+      const { username, token_version } = req.decoded;
+
+      // * Update token version
+      const newVersion = token_version + 1;
+
+      await UserService.updateTokenVersion(username, newVersion);
+
+      res
+        .cookie('refresh_token', '', {
+          maxAge: 0,
+          overwrite: true,
+        })
+        .clearCookie('refresh_token')
+        .send({
+          status: 'success',
+          message: 'User Logout',
+        });
+    } catch (error) {
+      res.send(error.message);
+    }
+  };
 }
 
 export default UserController;

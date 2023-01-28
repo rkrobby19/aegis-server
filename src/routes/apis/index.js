@@ -24,6 +24,7 @@ router.post(
   UserController.login,
 );
 router.post(Routes.Token, validateRefreshToken, UserController.refreshToken);
+router.post(Routes.Logout, validateRefreshToken, UserController.logout);
 router.get(Routes.Users, [Middleware.Auth], UserController.getUsers);
 
 router.post(

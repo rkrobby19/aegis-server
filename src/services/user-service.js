@@ -58,6 +58,17 @@ class UserService {
       },
     );
   };
+
+  static updateTokenVersion = async (username, token_version) => {
+    await User.update(
+      { token_version },
+      {
+        where: {
+          username,
+        },
+      },
+    );
+  };
 }
 
 export default UserService;
