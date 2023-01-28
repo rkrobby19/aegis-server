@@ -132,14 +132,17 @@ class UserController extends BaseController {
 
   static refreshToken = async (req, res) => {
     try {
-      const token = req.cookies.refresh_token;
-      const decode = Jwt.decodeToken(token);
-      const { username } = decode;
+      const { username, token_version } = req.decoded;
 
       // * Find user data
       const user = await UserService.getUserByUsername({ username });
 
       // ! Comparing token_version
+      if (token_version !== user.token_version) {
+        return res
+          .status(401)
+          .send({ status: 'error', message: 'Token version not valid' });
+      }
 
       // * Generate new access token
       const payload = {
