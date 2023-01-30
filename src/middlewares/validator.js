@@ -101,15 +101,11 @@ const validateRefreshToken = async (req, res, next) => {
 
   const verify = await Jwt.verifyRefreshToken(refresh_token);
 
-  if (verify.status === 'error') {
-    return res
-      .status(401)
-      .send({ status: verify.status, message: verify.message });
+  if (verify.username) {
+    req.decoded = verify;
+    return next();
   }
-
-  const decoded = verify.data;
-  req.decoded = decoded;
-  return next();
+  return res.status(400).send({ status: verify.name, message: verify.message });
 };
 
 module.exports = {

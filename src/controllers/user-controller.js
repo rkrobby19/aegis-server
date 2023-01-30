@@ -33,24 +33,19 @@ class UserController extends BaseController {
         throw new Error(Errors.UserAlreadyExist);
       }
 
-      const payload = {
-        username,
-        email,
-        token_version: 0,
-      };
-
-      const refresh_token = Jwt.signRefreshToken(payload);
-
       user = await UserService.registerUser({
         username,
         email,
         password,
-        refresh_token,
       });
 
       if (!user) {
         throw new Error(Errors.FailedToRegister);
       }
+
+      const refresh_token = await UserService.generateRefreshToken(user);
+
+      await UserService.updateToken(username, refresh_token);
 
       const cashFlow = await CashFlowService.addCashFlow();
       if (!cashFlow) {
@@ -84,32 +79,26 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToSignIn);
       }
 
+      const access_token = await UserService.loginUser({
+        user,
+        password,
+      });
+
       let { refresh_token } = user.dataValues;
 
       const verify = Jwt.verifyRefreshToken(refresh_token);
 
       if (
         !refresh_token
-        || verify.status === 'error'
-        || verify.data.token_version !== user.dataValues.token_version
+        || !verify.username
+        || verify.token_version !== user.dataValues.token_version
       ) {
-        const payload = {
-          username: user.dataValues.username,
-          email: user.dataValues.email,
-          token_version: user.dataValues.token_version,
-        };
-
-        const newToken = Jwt.signRefreshToken(payload);
+        const newToken = await UserService.generateRefreshToken(user);
 
         await UserService.updateToken(username, newToken);
 
         refresh_token = newToken;
       }
-
-      const access_token = await UserService.loginUser({
-        user,
-        password,
-      });
 
       const wallets = await WalletService.getWallets(user.dataValues.id);
 
@@ -142,13 +131,7 @@ class UserController extends BaseController {
           .send({ status: 'error', message: 'Token version not valid' });
       }
 
-      const payload = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-      };
-
-      const access_token = Jwt.sign(payload);
+      const access_token = await UserService.generateAccessToken(user);
 
       return res.send({
         access_token,

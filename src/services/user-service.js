@@ -23,13 +23,10 @@ class UserService {
     return user;
   };
 
-  static registerUser = async ({
-    username, email, password, refresh_token,
-  }) => User.create({
+  static registerUser = async ({ username, email, password }) => User.create({
     username,
     email,
     password: hashSync(password, 10),
-    refresh_token,
   });
 
   static loginUser = async ({ user, password }) => {
@@ -37,6 +34,12 @@ class UserService {
       throw new Error(errors.FailedToSignIn);
     }
 
+    const token = await this.generateAccessToken(user);
+
+    return token;
+  };
+
+  static generateAccessToken = async (user) => {
     const payload = {
       id: user.id,
       username: user.username,
@@ -44,6 +47,18 @@ class UserService {
     };
 
     const token = Jwt.sign(payload);
+
+    return token;
+  };
+
+  static generateRefreshToken = async (user) => {
+    const payload = {
+      username: user.username,
+      email: user.email,
+      token_version: user.token_version,
+    };
+
+    const token = Jwt.signRefreshToken(payload);
 
     return token;
   };

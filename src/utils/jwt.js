@@ -25,11 +25,9 @@ class Jwt {
   static verifyRefreshToken = (token) =>
     jwt.verify(token, process.env.REFRESH_SECRET, (err, decoded) => {
       if (err) {
-        return { status: 'error', message: err.message };
+        return err;
       }
-      {
-        return { status: 'success', data: decoded };
-      }
+      return decoded;
     });
 
   static decodeToken = (token) => jwt.decode(token);
