@@ -41,6 +41,8 @@ const Errors = {
   TokenExpiredError: 'TokenExpiredError',
   JsonWebTokenError: 'JsonWebTokenError',
   NotBeforeError: 'NotBeforeError',
+
+  TokenVersionNotValid: 'Token version not valid',
 };
 
 export default Errors;

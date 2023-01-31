@@ -125,19 +125,16 @@ class UserController extends BaseController {
 
       const user = await UserService.getUserByUsername({ username });
 
-      if (token_version !== user.token_version) {
-        return res
-          .status(401)
-          .send({ status: 'error', message: 'Token version not valid' });
-      }
-
-      const access_token = await UserService.generateAccessToken(user);
+      const access_token = await UserService.tokenVersionChecker(
+        user,
+        token_version,
+      );
 
       return res.send({
         access_token,
       });
     } catch (error) {
-      return res.status(error.code).send({ message: error.message });
+      return res.send({ message: error.message });
     }
   };
 

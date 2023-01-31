@@ -39,6 +39,16 @@ class UserService {
     return token;
   };
 
+  static tokenVersionChecker = async (user, token_version) => {
+    if (token_version !== user.token_version) {
+      throw new Error(errors.TokenVersionNotValid);
+    }
+
+    const token = await this.generateAccessToken(user);
+
+    return token;
+  };
+
   static generateAccessToken = async (user) => {
     const payload = {
       id: user.id,

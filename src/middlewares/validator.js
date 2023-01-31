@@ -94,7 +94,7 @@ const validateRefreshToken = async (req, res, next) => {
 
   if (!refresh_token) {
     return res.status(403).send({
-      status: 'error',
+      status: 'Error',
       message: 'No token provided',
     });
   }
