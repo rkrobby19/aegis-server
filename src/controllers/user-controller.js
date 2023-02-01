@@ -3,7 +3,6 @@ import Errors from '../constants/errors';
 import CashFlowService from '../services/cash-flow-service';
 import UserService from '../services/user-service';
 import WalletService from '../services/wallet-service';
-import Jwt from '../utils/jwt';
 import BaseController from './base-controller';
 
 class UserController extends BaseController {
@@ -86,19 +85,7 @@ class UserController extends BaseController {
 
       let { refresh_token } = user.dataValues;
 
-      const verify = Jwt.verifyRefreshToken(refresh_token);
-
-      if (
-        !refresh_token
-        || !verify.username
-        || verify.token_version !== user.dataValues.token_version
-      ) {
-        const newToken = await UserService.generateRefreshToken(user);
-
-        await UserService.updateToken(username, newToken);
-
-        refresh_token = newToken;
-      }
+      refresh_token = await UserService.tokenCheck(user, refresh_token);
 
       const wallets = await WalletService.getWallets(user.dataValues.id);
 
@@ -111,6 +98,7 @@ class UserController extends BaseController {
           message: constants.Success,
           wallet: wallets[0],
           access_token,
+          refresh_token,
         });
     } catch (err) {
       const error = this.getError(err);
