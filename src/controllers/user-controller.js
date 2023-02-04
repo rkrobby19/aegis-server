@@ -37,9 +37,14 @@ class UserController extends BaseController {
         email,
         password,
       });
+
       if (!user) {
         throw new Error(Errors.FailedToRegister);
       }
+
+      const refresh_token = await UserService.generateRefreshToken(user);
+
+      await UserService.updateToken(username, refresh_token);
 
       const cashFlow = await CashFlowService.addCashFlow();
       if (!cashFlow) {
@@ -73,22 +78,74 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToSignIn);
       }
 
-      const token = await UserService.loginUser({
+      const access_token = await UserService.loginUser({
         user,
         password,
       });
 
+      let { refresh_token } = user.dataValues;
+
+      refresh_token = await UserService.tokenCheck(user, refresh_token);
+
       const wallets = await WalletService.getWallets(user.dataValues.id);
 
-      return res.send({
-        message: constants.Success,
-        wallet: wallets[0],
-        token,
-      });
+      return res
+        .cookie('refresh_token', refresh_token, {
+          maxAges: 1000 * 60 * 60 * 24,
+          httpOnly: true,
+        })
+        .send({
+          message: constants.Success,
+          wallet: wallets[0],
+          access_token,
+          refresh_token,
+        });
     } catch (err) {
       const error = this.getError(err);
 
       return res.status(error.code).send({ message: error.message });
+    }
+  };
+
+  static refreshToken = async (req, res) => {
+    try {
+      const { username, token_version } = req.decoded;
+
+      const user = await UserService.getUserByUsername({ username });
+
+      const access_token = await UserService.tokenVersionChecker(
+        user,
+        token_version,
+      );
+
+      return res.send({
+        access_token,
+      });
+    } catch (error) {
+      return res.send({ message: error.message });
+    }
+  };
+
+  static logout = async (req, res) => {
+    try {
+      const { username, token_version } = req.decoded;
+
+      const newVersion = token_version + 1;
+
+      await UserService.updateTokenVersion(username, newVersion);
+
+      res
+        .cookie('refresh_token', '', {
+          maxAge: 0,
+          overwrite: true,
+        })
+        .clearCookie('refresh_token')
+        .send({
+          status: 'success',
+          message: 'User Logout',
+        });
+    } catch (error) {
+      res.send(error.message);
     }
   };
 }

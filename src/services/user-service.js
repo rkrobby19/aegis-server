@@ -23,24 +23,51 @@ class UserService {
     return user;
   };
 
-  static registerUser = async ({
-    username,
-    email,
-    password,
-  }) => User.create({
+  static registerUser = async ({ username, email, password }) => User.create({
     username,
     email,
     password: hashSync(password, 10),
   });
 
-  static loginUser = async ({
-    user,
-    password,
-  }) => {
+  static loginUser = async ({ user, password }) => {
     if (!user || !compareSync(password, user.password)) {
       throw new Error(errors.FailedToSignIn);
     }
 
+    const token = await this.generateAccessToken(user);
+
+    return token;
+  };
+
+  static tokenCheck = async (user, refresh_token) => {
+    const verify = Jwt.verifyRefreshToken(refresh_token);
+
+    if (
+      !refresh_token
+      || !verify.username
+      || verify.token_version !== user.token_version
+    ) {
+      const newToken = await this.generateRefreshToken(user);
+
+      await this.updateToken(user.username, newToken);
+
+      return newToken;
+    }
+
+    return refresh_token;
+  };
+
+  static tokenVersionChecker = async (user, token_version) => {
+    if (token_version !== user.token_version) {
+      throw new Error(errors.TokenVersionNotValid);
+    }
+
+    const token = await this.generateAccessToken(user);
+
+    return token;
+  };
+
+  static generateAccessToken = async (user) => {
     const payload = {
       id: user.id,
       username: user.username,
@@ -50,6 +77,40 @@ class UserService {
     const token = Jwt.sign(payload);
 
     return token;
+  };
+
+  static generateRefreshToken = async (user) => {
+    const payload = {
+      username: user.username,
+      email: user.email,
+      token_version: user.token_version,
+    };
+
+    const token = Jwt.signRefreshToken(payload);
+
+    return token;
+  };
+
+  static updateToken = async (username, refresh_token) => {
+    await User.update(
+      { refresh_token },
+      {
+        where: {
+          username,
+        },
+      },
+    );
+  };
+
+  static updateTokenVersion = async (username, token_version) => {
+    await User.update(
+      { token_version },
+      {
+        where: {
+          username,
+        },
+      },
+    );
   };
 }
 

@@ -8,7 +8,11 @@ import TransactionController from '../../controllers/transaction-controller';
 import LogController from '../../controllers/log-controller';
 
 const router = express.Router();
-const { validate, validationRules } = require('../../middlewares/validator');
+const {
+  validate,
+  validationRules,
+  validateRefreshToken,
+} = require('../../middlewares/validator');
 
 router.post(
   Routes.Register,
@@ -20,6 +24,8 @@ router.post(
   [validationRules(Services.Login), validate, Middleware.Guest],
   UserController.login,
 );
+router.post(Routes.Token, validateRefreshToken, UserController.refreshToken);
+router.post(Routes.Logout, validateRefreshToken, UserController.logout);
 router.get(Routes.Users, [Middleware.Auth], UserController.getUsers);
 
 router.post(
@@ -27,10 +33,22 @@ router.post(
   [validationRules(Services.AddWallet), validate, Middleware.Auth],
   WalletController.addWallet,
 );
-router.get(Routes.WalletID, [Middleware.Auth], WalletController.getDetailOfWallet);
+router.get(
+  Routes.WalletID,
+  [Middleware.Auth],
+  WalletController.getDetailOfWallet,
+);
 router.get(Routes.Wallets, [Middleware.Auth], WalletController.getWallets);
-router.get(Routes.WalletDetail, [Middleware.Auth], WalletController.getWalletByID);
-router.get(Routes.WalletsToTransfer, [Middleware.Auth], WalletController.getWalletsToTransfer);
+router.get(
+  Routes.WalletDetail,
+  [Middleware.Auth],
+  WalletController.getWalletByID,
+);
+router.get(
+  Routes.WalletsToTransfer,
+  [Middleware.Auth],
+  WalletController.getWalletsToTransfer,
+);
 router.delete(
   Routes.WalletID,
   [validationRules(Services.DeleteWallet), validate, Middleware.Auth],
