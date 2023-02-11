@@ -39,11 +39,11 @@ class UserService {
     return token;
   };
 
-  static tokenCheck = async (user, refresh_token) => {
-    const verify = Jwt.verifyRefreshToken(refresh_token);
+  static tokenCheck = async (user, refreshToken) => {
+    const verify = Jwt.verifyRefreshToken(refreshToken);
 
     if (
-      !refresh_token
+      !refreshToken
       || !verify.username
       || verify.token_version !== user.token_version
     ) {
@@ -54,11 +54,11 @@ class UserService {
       return newToken;
     }
 
-    return refresh_token;
+    return refreshToken;
   };
 
-  static tokenVersionChecker = async (user, token_version) => {
-    if (token_version !== user.token_version) {
+  static tokenVersionChecker = async (user, tokenVersion) => {
+    if (tokenVersion !== user.token_version) {
       throw new Error(errors.TokenVersionNotValid);
     }
 
