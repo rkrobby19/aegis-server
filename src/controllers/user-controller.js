@@ -42,9 +42,9 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToRegister);
       }
 
-      const refresh_token = await UserService.generateRefreshToken(user);
+      const refreshToken = await UserService.generateRefreshToken(user);
 
-      await UserService.updateToken(username, refresh_token);
+      await UserService.updateToken(username, refreshToken);
 
       const cashFlow = await CashFlowService.addCashFlow();
       if (!cashFlow) {
@@ -78,27 +78,26 @@ class UserController extends BaseController {
         throw new Error(Errors.FailedToSignIn);
       }
 
-      const access_token = await UserService.loginUser({
+      const accessToken = await UserService.loginUser({
         user,
         password,
       });
 
-      let { refresh_token } = user.dataValues;
+      let { refresh_token: refreshToken } = user.dataValues;
 
-      refresh_token = await UserService.tokenCheck(user, refresh_token);
+      refreshToken = await UserService.tokenCheck(user, refreshToken);
 
       const wallets = await WalletService.getWallets(user.dataValues.id);
 
       return res
-        .cookie('refresh_token', refresh_token, {
+        .cookie('refresh_token', refreshToken, {
           maxAges: 1000 * 60 * 60 * 24,
           httpOnly: true,
         })
         .send({
           message: constants.Success,
           wallet: wallets[0],
-          access_token,
-          refresh_token,
+          access_token: accessToken,
         });
     } catch (err) {
       const error = this.getError(err);
@@ -109,17 +108,17 @@ class UserController extends BaseController {
 
   static refreshToken = async (req, res) => {
     try {
-      const { username, token_version } = req.decoded;
+      const { username, token_version: tokenVersion } = req.decoded;
 
       const user = await UserService.getUserByUsername({ username });
 
-      const access_token = await UserService.tokenVersionChecker(
+      const accessToken = await UserService.tokenVersionChecker(
         user,
-        token_version,
+        tokenVersion,
       );
 
       return res.send({
-        access_token,
+        access_token: accessToken,
       });
     } catch (error) {
       return res.send({ message: error.message });

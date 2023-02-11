@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Create env file
         run: |
           touch .env
@@ -19,6 +19,7 @@ jobs:
           echo FE_LOCAL_HOST=${{ secrets.FE_LOCAL_HOST }} >> .env
           echo FE_STAGING_HOST=${{ secrets.FE_STAGING_HOST }} >> .env
           echo SECRET=${{ secrets.JWT_SECRET_KEY }} >> .env
+          echo REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET_KEY }} >> .env
           echo DB_URL=${{ secrets.DB_URL }} >> .env
           cat .env
 

@@ -90,16 +90,16 @@ const validate = (req, res, next) => {
 };
 
 const validateRefreshToken = async (req, res, next) => {
-  const { refresh_token } = req.cookies;
+  const { refresh_token: refreshToken } = req.cookies;
 
-  if (!refresh_token) {
+  if (!refreshToken) {
     return res.status(403).send({
       status: 'Error',
       message: 'No token provided',
     });
   }
 
-  const verify = await Jwt.verifyRefreshToken(refresh_token);
+  const verify = await Jwt.verifyRefreshToken(refreshToken);
 
   if (verify.username) {
     req.decoded = verify;
