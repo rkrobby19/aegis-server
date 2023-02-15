@@ -1,7 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest": true
   },
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -19,7 +20,8 @@
     }
   },
   "plugins": [
-    "react"
+    "react",
+    "jest"
   ],
   "rules": {
     "no-console": 0,
