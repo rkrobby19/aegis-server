@@ -33,6 +33,14 @@ class Jwt {
   static verify = (token) =>
     jwt.verify(token, process.env.SECRET, this.OPTIONS);
 
+  static verifyAccessToken = (token) =>
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+      if (err) {
+        throw new Error(err.message);
+      }
+      return decoded;
+    });
+
   static verifyRefreshToken = (token) =>
     jwt.verify(token, process.env.REFRESH_SECRET, (err, decoded) => {
       if (err) {
