@@ -8,18 +8,17 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: process.env.DB_CONNECTION,
   },
-  stage: {
+  test: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE_STAGE,
-    host: process.env.DB_HOST_STAGE,
+    database: process.env.DB_DATABASE_TEST,
+    host: process.env.DB_HOST,
     dialect: process.env.DB_CONNECTION,
   },
+  stage: {
+    url: process.env.DB_URL,
+  },
   production: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE_PRODUCTION,
-    host: process.env.DB_HOST_PRODUCTION,
-    dialect: process.env.DB_CONNECTION,
+    url: process.env.DB_URL_PRODUCTION,
   },
 };

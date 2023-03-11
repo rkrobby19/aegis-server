@@ -52,27 +52,15 @@ $ pnpm install
 | CONTAINER_NAME | Docker Container Name       |
 | DOCKER_IMAGE   | Docker Image Postgres       |
 
-### Setup infrastructure
+### Run the development server:
 
-- Install all dependencies
-
-```
-pnpm install
-```
-
-- Create postgres container:
+- Run server
 
 ```
-make postgres
+make dev
 ```
 
-- Start postgres container:
-
-```
-make startcontainer
-```
-
-- Create database:
+- Created db
 
 ```
 make createdb
@@ -82,26 +70,6 @@ make createdb
 
 ```
 make dropdb
-```
-
-### Run the development server:
-
-- Run server
-
-```
-make rundev
-```
-
-- Created db
-
-```
-make createdbdev
-```
-
-- Drop database:
-
-```
-make dropdbdev
 ```
 
 - Run db migration up all versions:
@@ -115,6 +83,28 @@ make migrateup
 ```
 make migratedown
 ```
+
+## Documentation
+
+### API Documentation
+
+- Access the API documentation at [this address](https://documenter.getpostman.com/view/16991559/2s8YekREej).
+
+### DB Documentation
+
+- Install dbdocs
+
+  ```
+  pnpm install -g dbdocs
+  ```
+
+- Generate DB documentation:
+
+  ```
+  make dbdocs
+  ```
+
+- Access the DB documentation at [this address](https://dbdocs.io/ariefromadhon/aegis). Password: `secret`.
 
 ## Development Flow
 
