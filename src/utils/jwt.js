@@ -36,7 +36,7 @@ class Jwt {
   static verifyAccessToken = (token) =>
     jwt.verify(token, process.env.SECRET, (err, decoded) => {
       if (err) {
-        throw new Error(err.message);
+        return err;
       }
       return decoded;
     });
@@ -49,7 +49,7 @@ class Jwt {
       return decoded;
     });
 
-  static decodeToken = (token) => jwt.decode(token);
+  static decodeToken = (token) => jwt.decode(token, { complete: true });
 }
 
 export default Jwt;

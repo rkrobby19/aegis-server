@@ -15,6 +15,10 @@ const AuthMiddleware = async (req, res, next) => {
     const token = authorization.split(' ')[1];
     const payload = Jwt.verifyAccessToken(token);
 
+    if (payload.message) {
+      throw new Error(payload.message);
+    }
+
     const user = await UserService.getUserById({
       id: payload.id,
     });
